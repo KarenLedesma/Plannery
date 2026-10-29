@@ -51,12 +51,27 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .day h3{font-size:1.05rem;margin-bottom:6px}
 .empty{color:var(--mut);text-align:center;padding:18px}
 @media (max-width:560px){.row{grid-template-columns:1fr}.row .v{text-align:left}}
+:root{--bg:#eaf3f8;--sf:#fff;--ink:#0b2a3c;--mut:#4f6b7d;--ln:#cfe0ea;--ac:#0b6ea8;--ac2:#d3ebf7;--sun:#f08a24;--sun2:#fde9d2;--warn:#c2410c;--ok:#1f8a4c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1a26;--sf:#10283a;--ink:#e6f2f9;--mut:#8fb0c4;--ln:#1f4058;--ac:#4bb3ee;--ac2:#12384f;--sun:#ffa94d;--sun2:#3a2a14;--warn:#ff8a5c;--ok:#5fd08a}}
+:root[data-theme="dark"]{--bg:#0a1a26;--sf:#10283a;--ink:#e6f2f9;--mut:#8fb0c4;--ln:#1f4058;--ac:#4bb3ee;--ac2:#12384f;--sun:#ffa94d;--sun2:#3a2a14;--warn:#ff8a5c;--ok:#5fd08a}
+header{background:linear-gradient(120deg,#0a4a74,#0b6ea8 58%,#f08a24);color:#fff;border-radius:14px;padding:22px 20px;margin-bottom:14px}
+header p{color:#e3f1f9}header .chip{background:rgba(255,255,255,.2);color:#fff}
+.brand{font-family:Georgia,serif;font-size:1rem;opacity:.9;display:block}
+nav button[aria-selected="true"]{border-color:var(--sun)}
+.kpi.main{background:linear-gradient(135deg,#0a4a74,#0b6ea8)}
+.btn{background:var(--sun);color:#1c1002;font-weight:600}.btn.alt{background:var(--ac2);color:var(--ac)}
+.card h2{color:var(--ac);font-size:1.1rem}
+.alerta{background:var(--sun2);border-left:4px solid var(--sun);padding:10px 14px;border-radius:0 8px 8px 0;margin-bottom:14px}
+.filtros{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin:10px 0}.filtros>div{min-width:140px}
+.csvbox{width:100%;height:90px;margin-bottom:8px}
+.nota{display:flex;justify-content:space-between;gap:8px;padding:6px 10px;margin-top:6px;background:var(--sun2);border-radius:6px}
+.nf{margin-top:8px}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
- <div><h1 id="tn">Bitácora de viaje</h1><p id="ts"></p></div>
+ <div><b class="brand">Plannery</b><h1 id="tn">Bitácora de viaje</h1><p id="ts"></p></div>
  <span class="chip">Prototipo · datos de ejemplo</span>
 </header>
 <nav role="tablist" id="nav"></nav>
@@ -68,12 +83,12 @@ var FASES=["antes","durante","después"];
 var KEY="bitacora-proto-v1";
 function seed(){return{viaje:{nombre:"Bariloche en primavera",dias:5,presupuesto:900000},cot:1500,
  act:[{id:1,dia:1,n:"Vuelo de ida y vuelta",c:"Transporte",e:180000},{id:2,dia:1,n:"Hostería (5 noches)",c:"Alojamiento",e:300000},{id:3,dia:2,n:"Circuito Chico",c:"Excursiones",e:60000},{id:4,dia:3,n:"Cerro Otto y teleférico",c:"Excursiones",e:45000},{id:5,dia:2,n:"Comidas del día",c:"Comida",e:40000},{id:6,dia:4,n:"Navegación Isla Victoria",c:"Excursiones",e:90000}],
- gas:[{id:1,d:"Vuelo reservado",m:172000,mon:"ARS",c:"Transporte",f:"antes"},{id:2,d:"Seña de la hostería",m:150000,mon:"ARS",c:"Alojamiento",f:"antes"},{id:3,d:"Cena de cordero",m:38000,mon:"ARS",c:"Comida",f:"durante"}],nid:100}}
+ gas:[{id:1,d:"Vuelo reservado",m:172000,mon:"ARS",c:"Transporte",f:"antes"},{id:2,d:"Seña de la hostería",m:150000,mon:"ARS",c:"Alojamiento",f:"antes"},{id:3,d:"Cena de cordero",m:38000,mon:"ARS",c:"Comida",f:"durante"}],bit:[{id:7,dia:1,f:"2026-10-12",x:"Llegamos con lluvia, pero el lago se veía increíble."}],nid:100}}
 var S;
 try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
-if(!S||!S.viaje)S=seed();
+if(!S||!S.viaje)S=seed();if(!S.bit)S.bit=[];
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
-var tab="resumen",msg="",draft=null;
+var tab="resumen",msg="",draft=null,fCat="",fFase="";
 var TABS=[["resumen","Resumen"],["gastos","Gastos"],["itinerario","Itinerario"],["destinos","Destinos y hoteles"]];
 function $(h){var d=document.createElement("div");d.innerHTML=h;return d}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
@@ -103,7 +118,7 @@ function resumenIA(){
 }
 function vResumen(){
  var te=est(),tr=real(),b=S.viaje.presupuesto,h='<div class="kpis"><div class="kpi main"><small>Presupuesto</small><b>'+money(b)+'</b></div><div class="kpi"><small>Estimado (itinerario)</small><b>'+money(te)+'</b></div><div class="kpi"><small>Gastado real</small><b>'+money(tr)+'</b></div><div class="kpi"><small>Disponible</small><b style="color:'+(b-tr<0?"var(--warn)":"var(--ok)")+'">'+money(b-tr)+'</b></div></div>';
- h+='<div class="card"><h2>Estimado vs. real por categoría</h2><p class="leg">Barra azul: estimado. Barra verde: gastado (naranja si se pasó).</p>';
+ var ov=CATS.filter(function(c){return est(c)>0&&real(c)>est(c)});if(ov.length)h+='<div class="alerta"><b>Te pasaste de lo estimado</b> en '+ov.join(", ")+'. Revisá el resto del viaje para compensar.</div>';h+='<div class="card"><h2>Estimado vs. real por categoría</h2><p class="leg">Barra azul: estimado. Barra verde: gastado (naranja si se pasó).</p>';
  CATS.forEach(function(c){var e=est(c),r=real(c),mx=Math.max(e,r,1);h+='<div class="row"><b>'+c+'</b><div><div class="bar"><i style="width:'+pct(e,mx)+'%"></i></div><div class="bar r'+(r>e&&e>0?" over":"")+'"><i style="width:'+pct(r,mx)+'%"></i></div></div><div class="v">'+money(e)+"<br>"+money(r)+"</div></div>"});
  h+='</div><div class="card"><h2>Gastos por fase</h2><div class="kpis" style="margin:10px 0 0">'+FASES.map(function(f){return'<div class="kpi"><small>'+f.charAt(0).toUpperCase()+f.slice(1)+'</small><b>'+money(real(null,f))+'</b></div>'}).join("")+'</div></div>';
  h+='<div class="card"><h2>Resumen del viaje</h2><p class="mut">En la versión real lo redacta un modelo de IA desde el backend. Acá se genera con reglas.</p><button class="btn" id="ia">Generar resumen</button><div id="iaout"></div></div>';
@@ -112,21 +127,22 @@ function vResumen(){
 function vGastos(){
  var d=draft||{d:"",m:"",mon:"ARS",c:"Otros",f:"durante"};
  var h='<div class="card"><h2>Carga rápida con IA</h2><p class="mut">Escribí como hablás, por ejemplo “pagué 15 mil de nafta” o “entrada al museo 20 usd”. El asistente completa el formulario y vos lo confirmás.</p><form id="qf"><div style="grid-column:1/-1"><label for="q">¿Qué gastaste?</label><input id="q" placeholder="pagué 15 mil de nafta"></div><button class="btn alt" type="submit">Interpretar</button></form></div>';
- h+='<div class="card"><h2>'+(draft?"Confirmá el gasto":"Nuevo gasto")+'</h2><form id="gf"><div><label for="gd">Descripción</label><input id="gd" required value="'+esc(d.d)+'"></div><div><label for="gm">Monto</label><input id="gm" type="number" min="1" step="any" required value="'+d.m+'"></div><div><label for="gmo">Moneda</label><select id="gmo">'+opts(["ARS","USD"],d.mon)+'</select></div><div><label for="gc">Categoría</label><select id="gc">'+opts(CATS,d.c)+'</select></div><div><label for="gf2">Fase</label><select id="gf2">'+opts(FASES,d.f)+'</select></div><button class="btn" type="submit">Guardar gasto</button></form>';
+ h+='<div class="card"><h2>'+(draft&&draft.id?"Editar gasto":draft?"Confirmá el gasto":"Nuevo gasto")+'</h2><form id="gf"><div><label for="gd">Descripción</label><input id="gd" required value="'+esc(d.d)+'"></div><div><label for="gm">Monto</label><input id="gm" type="number" min="1" step="any" required value="'+d.m+'"></div><div><label for="gmo">Moneda</label><select id="gmo">'+opts(["ARS","USD"],d.mon)+'</select></div><div><label for="gc">Categoría</label><select id="gc">'+opts(CATS,d.c)+'</select></div><div><label for="gf2">Fase</label><select id="gf2">'+opts(FASES,d.f)+'</select></div><button class="btn" type="submit">'+(draft&&draft.id?"Guardar cambios":"Guardar gasto")+'</button></form>';
  h+='<p class="mut" style="margin:10px 0 0">Cotización USD usada: <input id="cot" type="number" min="1" value="'+S.cot+'" style="width:100px;display:inline-block"> ARS (editable)</p></div>';
- h+='<div class="card sc"><h2>Gastos registrados</h2>';
- if(!S.gas.length)h+='<p class="empty">Todavía no cargaste gastos. Empezá con la carga rápida.</p>';
- else h+='<table><tr><th>Descripción</th><th>Categoría</th><th>Fase</th><th class="n">Monto</th><th></th></tr>'+S.gas.map(function(g){return'<tr><td>'+esc(g.d)+'</td><td><span class="tag">'+g.c+'</span></td><td>'+g.f+'</td><td class="n">'+(g.mon==="USD"?"USD "+g.m+"<br><small class=mut>"+money(ars(g))+"</small>":money(g.m))+'</td><td><button class="x" data-dg="'+g.id+'" aria-label="Eliminar gasto">×</button></td></tr>'}).join("")+'</table>';
+ var G=S.gas.filter(function(g){return(!fCat||g.c===fCat)&&(!fFase||g.f===fFase)});h+='<div class="card sc"><h2>Gastos registrados</h2><div class="filtros"><div><label for="fc">Categoría</label><select id="fc"><option value="">Todas</option>'+opts(CATS,fCat)+'</select></div><div><label for="ff">Fase</label><select id="ff"><option value="">Todas</option>'+opts(FASES,fFase)+'</select></div><button class="btn alt" id="csv">Exportar CSV</button></div><textarea id="csvout" class="csvbox" hidden readonly aria-label="CSV de gastos"></textarea>';
+ if(!S.gas.length)h+='<p class="empty">Todavía no cargaste gastos. Empezá con la carga rápida.</p>';else if(!G.length)h+='<p class="empty">Ningún gasto coincide con los filtros.</p>'
+ else h+='<table><tr><th>Descripción</th><th>Categoría</th><th>Fase</th><th class="n">Monto</th><th></th></tr>'+G.map(function(g){return'<tr><td>'+esc(g.d)+'</td><td><span class="tag">'+g.c+'</span></td><td>'+g.f+'</td><td class="n">'+(g.mon==="USD"?"USD "+g.m+"<br><small class=mut>"+money(ars(g))+"</small>":money(g.m))+'</td><td><button class="x" data-eg="'+g.id+'" aria-label="Editar gasto">✎</button><button class="x" data-dg="'+g.id+'" aria-label="Eliminar gasto">×</button></td></tr>'}).join("")+'</table>';
  return h+'</div>'
 }
-function vItin(){
- var h='<div class="card"><h2>Agregar actividad</h2><form id="af"><div><label for="ad">Día</label><input id="ad" type="number" min="1" max="'+S.viaje.dias+'" value="1" required></div><div style="grid-column:span 2"><label for="an">Actividad</label><input id="an" required></div><div><label for="ac">Categoría</label><select id="ac">'+opts(CATS)+'</select></div><div><label for="ae">Costo estimado (ARS)</label><input id="ae" type="number" min="0" required></div><button class="btn" type="submit">Agregar</button></form></div>';
+function vItin(){var A=draft||{dia:1,n:"",c:"Otros",e:""};
+ var h='<div class="card"><h2>'+(draft&&draft.id?"Editar actividad":"Agregar actividad")+'</h2><form id="af"><div><label for="ad">Día</label><input id="ad" type="number" min="1" max="'+S.viaje.dias+'" value="'+A.dia+'" required></div><div style="grid-column:span 2"><label for="an">Actividad</label><input id="an" required value="'+esc(A.n)+'"></div><div><label for="ac">Categoría</label><select id="ac">'+opts(CATS,A.c)+'</select></div><div><label for="ae">Costo estimado (ARS)</label><input id="ae" type="number" min="0" required value="'+A.e+'"></div><button class="btn" type="submit">'+(draft&&draft.id?"Guardar cambios":"Agregar")+'</button></form></div>';
  for(var d=1;d<=S.viaje.dias;d++){var L=S.act.filter(function(a){return a.dia===d});
   h+='<div class="card day"><h3>Día '+d+' <span class="mut">· estimado '+money(L.reduce(function(s,a){return s+a.e},0))+'</span></h3>';
-  h+=L.length?L.map(function(a){return'<div style="display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--ln)"><span>'+esc(a.n)+' <span class="tag">'+a.c+'</span></span><span>'+money(a.e)+' <button class="x" data-da="'+a.id+'" aria-label="Eliminar actividad">×</button></span></div>'}).join(""):'<p class="empty" style="padding:6px">Sin actividades. Agregá la primera arriba.</p>';
+  h+=L.length?L.map(function(a){return'<div style="display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--ln)"><span>'+esc(a.n)+' <span class="tag">'+a.c+'</span></span><span>'+money(a.e)+' <button class="x" data-ea="'+a.id+'" aria-label="Editar actividad">✎</button><button class="x" data-da="'+a.id+'" aria-label="Eliminar actividad">×</button></span></div>'}).join(""):'<p class="empty" style="padding:6px">Sin actividades. Agregá la primera arriba.</p>';h+=noteHtml(d);
   h+='</div>'}
  return h
 }
+function noteHtml(d){return S.bit.filter(function(n){return n.dia===d}).map(function(n){return'<div class="nota"><span>'+esc(n.x)+' <small class="mut">'+n.f+'</small></span><button class="x" data-db="'+n.id+'" aria-label="Eliminar nota">×</button></div>'}).join("")+'<form class="nf" data-bf="'+d+'"><input aria-label="Nota del día '+d+'" placeholder="Anotá algo del día '+d+'…"><button class="btn alt" type="submit">Agregar nota</button></form>'}
 function vDest(){return'<div class="card"><h2>Destinos y hoteles</h2><p>Acá va la segunda parte del producto: destinos de Argentina, hoteles y vuelos para comparar, y el modo “paquete de agencia vs. armarlo por tu cuenta”.</p><p class="mut">Se carga con datos de ejemplo desde la base de datos y se conecta con el viaje, para que lo que elegís acá llegue directo al itinerario y al presupuesto. Se define en la próxima etapa.</p></div>'}
 function render(){
  document.getElementById("tn").textContent=S.viaje.nombre;
@@ -141,9 +157,15 @@ function $i(id){return document.getElementById(id)}
 function bind(){
  if($i("ia"))$i("ia").onclick=function(){$i("iaout").innerHTML='<div class="ia">'+esc(resumenIA())+'</div>'};
  if($i("qf"))$i("qf").onsubmit=function(e){e.preventDefault();var t=$i("q").value.trim();if(!t)return;draft=parse(t);render()};
- if($i("gf"))$i("gf").onsubmit=function(e){e.preventDefault();S.gas.push({id:S.nid++,d:$i("gd").value.trim(),m:parseFloat($i("gm").value),mon:$i("gmo").value,c:$i("gc").value,f:$i("gf2").value});draft=null;save();render()};
+ if($i("gf"))$i("gf").onsubmit=function(e){e.preventDefault();var o={d:$i("gd").value.trim(),m:parseFloat($i("gm").value),mon:$i("gmo").value,c:$i("gc").value,f:$i("gf2").value};if(draft&&draft.id)Object.assign(S.gas.find(function(g){return g.id===draft.id}),o);else S.gas.push(Object.assign({id:S.nid++},o));draft=null;save();render()};
  if($i("cot"))$i("cot").onchange=function(){var n=parseFloat(this.value);if(n>0){S.cot=n;save();render()}};
- if($i("af"))$i("af").onsubmit=function(e){e.preventDefault();S.act.push({id:S.nid++,dia:parseInt($i("ad").value),n:$i("an").value.trim(),c:$i("ac").value,e:parseFloat($i("ae").value)});save();render()};
+ if($i("af"))$i("af").onsubmit=function(e){e.preventDefault();var o={dia:parseInt($i("ad").value),n:$i("an").value.trim(),c:$i("ac").value,e:parseFloat($i("ae").value)};if(draft&&draft.id)Object.assign(S.act.find(function(a){return a.id===draft.id}),o);else S.act.push(Object.assign({id:S.nid++},o));draft=null;save();render()};
+ if($i("fc")){$i("fc").onchange=function(){fCat=this.value;render()};$i("ff").onchange=function(){fFase=this.value;render()}}
+ if($i("csv"))$i("csv").onclick=function(){var rows=[["Descripción","Monto","Moneda","Categoría","Fase"]].concat(S.gas.map(function(g){return[g.d,g.m,g.mon,g.c,g.f]}));var t=rows.map(function(r){return r.map(function(v){return'"'+String(v).replace(/"/g,'""')+'"'}).join(",")}).join("\n");var b=$i("csvout");b.value=t;b.hidden=false;try{var a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+t],{type:"text/csv"}));a.download="plannery-gastos.csv";a.click()}catch(e){}};
+ document.querySelectorAll("[data-eg]").forEach(function(b){b.onclick=function(){var g=S.gas.find(function(x){return x.id==b.dataset.eg});draft={id:g.id,d:g.d,m:g.m,mon:g.mon,c:g.c,f:g.f};render();window.scrollTo(0,0)}});
+ document.querySelectorAll("[data-ea]").forEach(function(b){b.onclick=function(){var a=S.act.find(function(x){return x.id==b.dataset.ea});draft={id:a.id,dia:a.dia,n:a.n,c:a.c,e:a.e};render();window.scrollTo(0,0)}});
+ document.querySelectorAll("[data-bf]").forEach(function(f){f.onsubmit=function(e){e.preventDefault();var v=f.querySelector("input").value.trim();if(!v)return;S.bit.push({id:S.nid++,dia:parseInt(f.dataset.bf),f:new Date().toISOString().slice(0,10),x:v});save();render()}});
+ document.querySelectorAll("[data-db]").forEach(function(b){b.onclick=function(){S.bit=S.bit.filter(function(n){return n.id!=b.dataset.db});save();render()}});
  document.querySelectorAll("[data-dg]").forEach(function(b){b.onclick=function(){S.gas=S.gas.filter(function(g){return g.id!=b.dataset.dg});save();render()}});
  document.querySelectorAll("[data-da]").forEach(function(b){b.onclick=function(){S.act=S.act.filter(function(a){return a.id!=b.dataset.da});save();render()}})
 }
