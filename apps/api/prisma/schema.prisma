@@ -1,0 +1,147 @@
+// Esquema de datos de Plannery. Se cambia solo con pull request revisado por el equipo.
+// Cómo está pensado y por qué: docs/modelo-de-datos.md y docs/decisiones/0002-esquema-de-datos.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Rol {
+  VIAJERO
+  ADMIN
+}
+
+enum TipoActividad {
+  INTERIOR
+  EXTERIOR
+  MIXTA
+}
+
+enum CategoriaGasto {
+  TRANSPORTE
+  ALOJAMIENTO
+  COMIDA
+  ACTIVIDADES
+  OTROS
+}
+
+enum FaseGasto {
+  ANTES
+  DURANTE
+  DESPUES
+}
+
+model Usuario {
+  id           String   @id @default(uuid()) @db.Uuid
+  nombre       String
+  email        String   @unique
+  passwordHash String
+  rol          Rol      @default(VIAJERO)
+  creadoEn     DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+  viajes       Viaje[]
+
+  @@map("usuarios")
+}
+
+// Hoy solo existe Ciudad de Buenos Aires. Sumar otra ciudad es cargar una fila
+// (con sus coordenadas para el pronóstico) y su catálogo de actividades.
+model Destino {
+  id          String      @id @default(uuid()) @db.Uuid
+  nombre      String
+  slug        String      @unique
+  latitud     Decimal     @db.Decimal(9, 6)
+  longitud    Decimal     @db.Decimal(9, 6)
+  zonaHoraria String      @default("America/Argentina/Buenos_Aires")
+  actividades Actividad[]
+  viajes      Viaje[]
+
+  @@map("destinos")
+}
+
+model Viaje {
+  id            String          @id @default(uuid()) @db.Uuid
+  nombre        String
+  destinoId     String          @db.Uuid
+  destino       Destino         @relation(fields: [destinoId], references: [id])
+  fechaInicio   DateTime        @db.Date
+  fechaFin      DateTime        @db.Date
+  presupuesto   Decimal         @db.Decimal(12, 2)
+  // Moneda de todo el viaje (presupuesto y gastos). Hoy siempre ARS.
+  moneda        String          @default("ARS") @db.Char(3)
+  usuarioId     String          @db.Uuid
+  usuario       Usuario         @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  itinerario    ItinerarioItem[]
+  gastos        Gasto[]
+  creadoEn      DateTime        @default(now())
+  actualizadoEn DateTime        @updatedAt
+
+  @@index([usuarioId])
+  @@map("viajes")
+}
+
+// Catálogo administrado por el ADMIN. Se archiva (activa = false) en vez de borrarse
+// cuando ya está en algún itinerario, para no romper viajes existentes.
+model Actividad {
+  id          String           @id @default(uuid()) @db.Uuid
+  destinoId   String           @db.Uuid
+  destino     Destino          @relation(fields: [destinoId], references: [id])
+  nombre      String
+  descripcion String?
+  tipo        TipoActividad
+  categoria   String?
+  direccion   String?
+  latitud     Decimal?         @db.Decimal(9, 6)
+  longitud    Decimal?         @db.Decimal(9, 6)
+  // Origen del dato, para importar sin duplicar y mostrar de dónde sale
+  fuente      String?
+  fuenteId    String?
+  relevadoEn  DateTime?        @db.Date
+  activa      Boolean          @default(true)
+  itinerario  ItinerarioItem[]
+  creadoEn    DateTime         @default(now())
+
+  @@unique([fuente, fuenteId])
+  @@index([destinoId, tipo])
+  @@map("actividades")
+}
+
+model ItinerarioItem {
+  id          String    @id @default(uuid()) @db.Uuid
+  viajeId     String    @db.Uuid
+  viaje       Viaje     @relation(fields: [viajeId], references: [id], onDelete: Cascade)
+  actividadId String    @db.Uuid
+  actividad   Actividad @relation(fields: [actividadId], references: [id], onDelete: Restrict)
+  fecha       DateTime  @db.Date
+  orden       Int       @default(0)
+  nota        String?
+
+  @@unique([viajeId, actividadId, fecha])
+  @@index([viajeId, fecha])
+  @@map("itinerario_items")
+}
+
+// Bitácora de gastos: cada fila es un gasto con lo estimado y, cuando ya ocurrió, lo real.
+model Gasto {
+  id             String         @id @default(uuid()) @db.Uuid
+  viajeId        String         @db.Uuid
+  viaje          Viaje          @relation(fields: [viajeId], references: [id], onDelete: Cascade)
+  descripcion    String
+  categoria      CategoriaGasto
+  fase           FaseGasto
+  montoEstimado  Decimal        @default(0) @db.Decimal(12, 2)
+  // null hasta que el gasto se hace efectivo
+  montoReal      Decimal?       @db.Decimal(12, 2)
+  fecha          DateTime?      @db.Date
+  nota           String?
+  creadoEn       DateTime       @default(now())
+  actualizadoEn  DateTime       @updatedAt
+
+  @@index([viajeId, fase])
+  @@index([viajeId, categoria])
+  @@map("gastos")
+}
