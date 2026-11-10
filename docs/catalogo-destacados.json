@@ -1,0 +1,240 @@
+[
+  {
+    "fuenteId": "sitios_de_interes|129",
+    "nombreApi": "Floralis Genérica (Escultura de la Flor)",
+    "nombre": "Floralis Genérica",
+    "tipo": "EXTERIOR",
+    "direccion": "Plaza de las Naciones Unidas, Recoleta",
+    "descripcion": "Gran escultura metálica con forma de flor, uno de los símbolos modernos de la Ciudad."
+  },
+  {
+    "fuenteId": "sitios_de_interes|131",
+    "nombreApi": "Cementerio de la Recoleta",
+    "nombre": "Cementerio de la Recoleta",
+    "tipo": "EXTERIOR",
+    "direccion": "Junín 1760, Recoleta",
+    "descripcion": "Histórico cementerio con mausoleos y esculturas, donde descansan figuras de la historia argentina."
+  },
+  {
+    "fuenteId": "sitios_de_interes|132",
+    "nombreApi": "Caminito",
+    "nombre": "Caminito",
+    "tipo": "EXTERIOR",
+    "direccion": "Caminito, La Boca",
+    "descripcion": "Pasaje peatonal y museo a cielo abierto en La Boca, famoso por las fachadas de colores."
+  },
+  {
+    "fuenteId": "sitios_de_interes|135",
+    "nombreApi": "Torre Monumental (Torre de los Ingleses)",
+    "nombre": "Torre Monumental",
+    "tipo": "EXTERIOR",
+    "direccion": "Plaza Fuerza Aérea Argentina, Retiro",
+    "descripcion": "Torre con reloj de estilo inglés, conocida durante años como Torre de los Ingleses."
+  },
+  {
+    "fuenteId": "sitios_de_interes|136",
+    "nombreApi": "Plaza Serrano",
+    "nombre": "Plaza Serrano",
+    "tipo": "EXTERIOR",
+    "direccion": "Palermo Soho",
+    "descripcion": "Plaza de Palermo Soho rodeada de bares y restaurantes; su nombre oficial es Plaza Julio Cortázar."
+  },
+  {
+    "fuenteId": "sitios_de_interes|120",
+    "nombreApi": "Plaza Primera Junta",
+    "nombre": "Plaza Primera Junta",
+    "tipo": "EXTERIOR",
+    "direccion": "Av. Rivadavia y Av. Díaz Vélez, Caballito",
+    "descripcion": "Plaza del barrio de Caballito, sobre la avenida Rivadavia y junto a la estación Primera Junta del subte A."
+  },
+  {
+    "fuenteId": "sitios_de_interes|122",
+    "nombreApi": "Obelisco",
+    "nombre": "Obelisco",
+    "tipo": "EXTERIOR",
+    "direccion": "Av. 9 de Julio y Av. Corrientes",
+    "descripcion": "Monumento de 67 metros inaugurado en 1936, en el cruce de dos de las avenidas más conocidas de Buenos Aires."
+  },
+  {
+    "fuenteId": "sitios_de_interes|130",
+    "nombreApi": "Puente de la Mujer",
+    "nombre": "Puente de la Mujer",
+    "tipo": "EXTERIOR",
+    "direccion": "Puerto Madero",
+    "descripcion": "Puente peatonal giratorio de Puerto Madero, diseñado por Santiago Calatrava e inaugurado en 2001."
+  },
+  {
+    "fuenteId": "sitios_de_interes|2455",
+    "nombreApi": "Casa Rosada",
+    "nombre": "Casa Rosada",
+    "tipo": "EXTERIOR",
+    "direccion": "Balcarce 50, Monserrat",
+    "descripcion": "Sede del Poder Ejecutivo Nacional, frente a la Plaza de Mayo, reconocible por su color rosado."
+  },
+  {
+    "fuenteId": "sitios_de_interes|2485",
+    "nombreApi": "Parque Tres de Febrero",
+    "nombre": "Parque Tres de Febrero (Bosques de Palermo)",
+    "tipo": "EXTERIOR",
+    "direccion": "Av. Sarmiento y Av. del Libertador, Palermo",
+    "descripcion": "Gran parque de Palermo con lagos y jardines, ideal para caminar o andar en bicicleta."
+  },
+  {
+    "fuenteId": "espacios_verdes_publicos|1330",
+    "nombreApi": "Carlos Thays (Jardín Botánico)",
+    "nombre": "Jardín Botánico Carlos Thays",
+    "tipo": "EXTERIOR",
+    "direccion": "Av. Santa Fe 3951, Palermo",
+    "descripcion": "Jardín de Palermo con gran variedad de plantas y árboles de distintas regiones, diseñado por Carlos Thays."
+  },
+  {
+    "fuenteId": "espacios_verdes_publicos|1444",
+    "nombreApi": "Jardín Japonés",
+    "nombre": "Jardín Japonés",
+    "tipo": "EXTERIOR",
+    "direccion": "Av. Casares 3450, Palermo",
+    "descripcion": "Jardín de inspiración japonesa en Palermo, con lago, puentes y senderos."
+  },
+  {
+    "fuenteId": "espacios_verdes_publicos|1312",
+    "nombreApi": "Parque de la Memoria",
+    "nombre": "Parque de la Memoria",
+    "tipo": "EXTERIOR",
+    "direccion": "Av. Costanera Rafael Obligado 6745, Núñez",
+    "descripcion": "Parque sobre la costa del Río de la Plata en homenaje a las víctimas del terrorismo de Estado, con esculturas."
+  },
+  {
+    "fuenteId": "espacios_verdes_publicos|1847",
+    "nombreApi": "Plaza Jardín de la Recoleta",
+    "nombre": "Plaza Jardín de la Recoleta",
+    "tipo": "EXTERIOR",
+    "descripcion": "Espacio verde del barrio de Recoleta, para una caminata tranquila."
+  },
+  {
+    "fuenteId": "espacios_verdes_publicos|1274",
+    "nombreApi": "Reserva Ecológica",
+    "nombre": "Reserva Ecológica Costanera Sur",
+    "tipo": "EXTERIOR",
+    "direccion": "Costanera Sur, Puerto Madero",
+    "descripcion": "Reserva natural a orillas del Río de la Plata, con senderos para caminar y observar aves y vegetación."
+  },
+  {
+    "fuenteId": "dependencias_culturales|2756",
+    "nombreApi": "Museo al Aire Libre de Artistas Plásticos de Caminito",
+    "nombre": "Museo al Aire Libre de Caminito",
+    "tipo": "EXTERIOR",
+    "direccion": "Caminito, La Boca",
+    "descripcion": "Calle-museo con esculturas y obras de artistas plásticos de La Boca."
+  },
+  {
+    "fuenteId": "dependencias_culturales|1668",
+    "nombreApi": "Museo Carlos Vega del Instituto Nacional de Musicología",
+    "nombre": "Museo Carlos Vega",
+    "tipo": "INTERIOR",
+    "direccion": "México 546, Monserrat",
+    "descripcion": "Museo vinculado al Instituto Nacional de Musicología, dedicado a la música y sus instrumentos."
+  },
+  {
+    "fuenteId": "dependencias_culturales|2189",
+    "nombreApi": "Museo Interactivo de Matematica - MateUBA Museum",
+    "nombre": "Museo Interactivo de Matemática (MateUBA)",
+    "tipo": "INTERIOR",
+    "descripcion": "Museo interactivo para aprender matemática con juegos y experimentos, ligado a la Universidad de Buenos Aires."
+  },
+  {
+    "fuenteId": "dependencias_culturales|2705",
+    "nombreApi": "Teatro Nacional Argentino - Teatro Cervantes",
+    "nombre": "Teatro Nacional Cervantes",
+    "tipo": "INTERIOR",
+    "direccion": "Libertad 815, San Nicolás",
+    "descripcion": "Teatro nacional con una sala histórica en el centro de la Ciudad. Conviene consultar la cartelera antes de ir."
+  },
+  {
+    "fuenteId": "dependencias_culturales|1896",
+    "nombreApi": "Teatro Colon",
+    "nombre": "Teatro Colón",
+    "tipo": "INTERIOR",
+    "direccion": "Cerrito 628, San Nicolás",
+    "descripcion": "Uno de los teatros líricos más importantes del mundo, conocido por su sala y su acústica. Ofrece visitas guiadas (consultar horarios)."
+  },
+  {
+    "fuenteId": "dependencias_culturales|2470",
+    "nombreApi": "Museo Nacional Bellas Artes",
+    "nombre": "Museo Nacional de Bellas Artes",
+    "tipo": "INTERIOR",
+    "direccion": "Av. del Libertador 1473, Recoleta",
+    "descripcion": "Museo nacional con obras de arte argentino e internacional, en el barrio de Recoleta."
+  },
+  {
+    "fuenteId": "dependencias_culturales|1476",
+    "nombreApi": "MALBA",
+    "nombre": "MALBA",
+    "tipo": "INTERIOR",
+    "direccion": "Av. Pres. Figueroa Alcorta 3415, Palermo",
+    "descripcion": "Museo dedicado al arte latinoamericano, con colección permanente y muestras temporales."
+  },
+  {
+    "fuenteId": "dependencias_culturales|1420",
+    "nombreApi": "Museo Evita. Instituto Nacional de Investigaciones Historicas Eva Peron.",
+    "nombre": "Museo Evita",
+    "tipo": "INTERIOR",
+    "direccion": "Lafinur 2988, Palermo",
+    "descripcion": "Museo dedicado a la vida de Eva Perón, ubicado en una casa histórica de Palermo."
+  },
+  {
+    "fuenteId": "dependencias_culturales|710",
+    "nombreApi": "Museo Historico Nacional",
+    "nombre": "Museo Histórico Nacional",
+    "tipo": "INTERIOR",
+    "direccion": "Defensa 1600, San Telmo",
+    "descripcion": "Museo sobre la historia argentina, en el Parque Lezama, en San Telmo."
+  },
+  {
+    "fuenteId": "dependencias_culturales|1620",
+    "nombreApi": "Museo Historico Nacional del Cabildo y de la Revolucion de Mayo",
+    "nombre": "Museo del Cabildo y de la Revolución de Mayo",
+    "tipo": "INTERIOR",
+    "direccion": "Bolívar 65, Monserrat",
+    "descripcion": "Museo en el edificio histórico del Cabildo, frente a la Plaza de Mayo, dedicado a la Revolución de Mayo."
+  },
+  {
+    "fuenteId": "dependencias_culturales|1427",
+    "nombreApi": "Planetario Galileo Galilei",
+    "nombre": "Planetario Galileo Galilei",
+    "tipo": "INTERIOR",
+    "direccion": "Parque Tres de Febrero, Palermo",
+    "descripcion": "Planetario con proyecciones sobre astronomía, dentro del Parque Tres de Febrero."
+  },
+  {
+    "fuenteId": "dependencias_culturales|1765",
+    "nombreApi": "Museo Casa Rosada",
+    "nombre": "Museo Casa Rosada",
+    "tipo": "INTERIOR",
+    "direccion": "Av. Paseo Colón 100, Monserrat",
+    "descripcion": "Museo sobre la historia de la presidencia argentina, junto a la Casa Rosada."
+  },
+  {
+    "fuenteId": "dependencias_culturales|2467",
+    "nombreApi": "Centro Cultural Recoleta",
+    "nombre": "Centro Cultural Recoleta",
+    "tipo": "MIXTA",
+    "direccion": "Junín 1930, Recoleta",
+    "descripcion": "Centro cultural con salas de arte, espectáculos y talleres, y espacios abiertos, junto al Cementerio de la Recoleta."
+  },
+  {
+    "fuenteId": "dependencias_culturales|704",
+    "nombreApi": "Mercado de San Telmo",
+    "nombre": "Mercado de San Telmo",
+    "tipo": "MIXTA",
+    "direccion": "Defensa 961, San Telmo",
+    "descripcion": "Histórico mercado de San Telmo con puestos de comida, antigüedades y objetos, en un edificio cubierto."
+  },
+  {
+    "fuenteId": "sitios_de_interes|2468",
+    "nombreApi": "Mercado de Pulgas",
+    "nombre": "Mercado de las Pulgas",
+    "tipo": "MIXTA",
+    "direccion": "Dorrego 1650",
+    "descripcion": "Mercado de antigüedades y objetos usados."
+  }
+]
