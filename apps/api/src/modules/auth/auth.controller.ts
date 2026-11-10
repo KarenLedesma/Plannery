@@ -1,7 +1,9 @@
-import { Body, Controller, HttpCode, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './auth.dto';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { CurrentUser, UsuarioActual } from '../../common/decorators/current-user.decorator';
 
 // Con la reescritura de Vercel (/api -> backend) el navegador ve un solo sitio,
 // así que SameSite=Lax alcanza. Ver docs/decisiones/0004-sesion-con-jwt-en-cookie.md
@@ -32,5 +34,11 @@ export class AuthController {
   logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('token', cookieOpts());
     return { ok: true };
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  me(@CurrentUser() usuario: UsuarioActual) {
+    return this.auth.perfil(usuario.id);
   }
 }
