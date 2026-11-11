@@ -1,7 +1,7 @@
 # Módulo itinerario
 
 - **Funcionalidad:** F2 · Viajes e itinerario
-- **Dueña:** (completar)
+- **Dueña:** Luz Vazquez
 - **Entidades que toca:** ItinerarioItem, Actividad, Viaje
 - **Depende de:** F1, módulo viajes, catálogo cargado (F3)
 
