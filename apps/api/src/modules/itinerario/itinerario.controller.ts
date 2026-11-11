@@ -44,7 +44,7 @@ export class ItinerarioController {
     @Body() dto: ActualizarItinerarioDto,
     @CurrentUser() usuario: UsuarioActual
   ) {
-    return this.itinerario.actualizar(itinerarioId, itemId, dto, usuario.id);
+    return this.itinerario.actualizar(dto, itemId, usuario.id, itinerarioId);
   }
 
   @Delete(':itinerarioId/:itemId')
@@ -55,3 +55,4 @@ export class ItinerarioController {
   ) {
     return this.itinerario.eliminar(itinerarioId, itemId, usuario.id);
   }
+}
