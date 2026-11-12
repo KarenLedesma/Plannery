@@ -5,15 +5,17 @@ import viteLogo from './assets/vite.svg'
 import './App.css'
 import { ViajeListComponent } from './features/viajes/ViajeListComponent'
 import { ViajeFormComponent } from './features/viajes/ViajeFormComponent'
+import { ItinerarioListComponent } from './features/itinerario/ItinerarioListComponent'
+import { ItinerarioFormComponent } from './features/itinerario/ItinerarioFormComponent'
 
 function App() {
-  const [view, setView] = useState<'list' | 'form' | 'none'>('none')
+  const [view, setView] = useState<'list' | 'form' | 'itinerario' | 'itinerarioNuevo' | 'none'>('none')
 
-  const navigateTo = (view: 'list' | 'form') => {
+  const navigateTo = (view: 'list' | 'form' | 'itinerario' | 'itinerarioNuevo') => {
     setView(view)
   }
 
-  const goBack = () => setView('list')
+  const goBack = () => setView('itinerario')
 
   return (
     <section id="center">
@@ -26,10 +28,13 @@ function App() {
       <nav style={{ marginBottom: '2rem' }}>
         <button onClick={() => navigateTo('list')} style={{ marginRight: '1rem' }}>Ver Viajes</button>
         <button onClick={() => navigateTo('form')}>Crear Viaje</button>
+        <button onClick={() => navigateTo('itinerario')} style={{ marginLeft: '1rem' }}>Ver Itinerario</button>
       </nav>
 
       {view === 'list' && <ViajeListComponent />}
       {view === 'form' && <ViajeFormComponent />}
+      {view === 'itinerario' && <ItinerarioListComponent />}
+      {view === 'itinerarioNuevo' && <ItinerarioFormComponent />}
       {view === 'none' && (
         <p>Seleccione una opción del menú nav</p>
       )}
