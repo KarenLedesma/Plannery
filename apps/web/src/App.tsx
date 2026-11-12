@@ -15,8 +15,6 @@ function App() {
     setView(view)
   }
 
-  const goBack = () => setView('itinerario')
-
   return (
     <section id="center">
       <div className="hero">

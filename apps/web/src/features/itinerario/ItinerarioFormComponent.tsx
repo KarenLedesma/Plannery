@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { crearItinerarioItem, type CrearItinerarioDto, type ItinerarioItem } from './itinerario.service';
+import { crearItinerarioItem } from './itinerario.service';
 
-export const ItinerarioFormComponent: React.FC = ({
+type ItinerarioFormProps = {
+  voyageId: string;
+};
+
+export const ItinerarioFormComponent: React.FC<ItinerarioFormProps> = ({
   voyageId
-}: { voyageId: string }) => {
-  const [datos, setDatos] = useState<CrearItinerarioDto>({
+}: ItinerarioFormProps) => {
+  const [datos, setDatos] = useState<{actividadId: string; fecha: string}>({
     actividadId: '',
     fecha: '',
   });
@@ -13,7 +17,7 @@ export const ItinerarioFormComponent: React.FC = ({
   const [error, setError] = useState<string | null>(null);
 
   const manejarCambio = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDatos({ ...datos, [e.target.name]: e.target.value as any } as CrearItinerarioDto);
+    setDatos({ ...datos, [e.target.name]: e.target.value as any });
   };
 
   const onSubmit = async (e: React.FormEvent) => {

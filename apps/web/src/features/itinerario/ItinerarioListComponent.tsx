@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { listarItinerario, type ItinerarioItem } from './itinerario.service';
+import { listarItinerario } from './itinerario.service';
 
-export const ItinerarioListComponent: React.FC = ({
+type ItinerarioListProps = {
+  voyageId: string;
+};
+
+export const ItinerarioListComponent: React.FC<ItinerarioListProps> = ({
   voyageId
-}: { voyageId: string }) => {
-  const [itinerario, setItinerario] = useState<ItinerarioItem[]>([]);
+}: ItinerarioListProps) => {
+  const [itinerario, setItinerario] = useState<Array<{id: string; actividadId: string; fecha: string; notas?: string}>>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
