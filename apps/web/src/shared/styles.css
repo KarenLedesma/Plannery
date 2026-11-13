@@ -1,0 +1,78 @@
+/* Estilos comunes de formularios y estructura. Cada funcionalidad puede sumar los suyos. */
+.auth {
+  max-width: 380px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+  text-align: left;
+}
+
+.auth form {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem;
+  border: 1px solid #8a8f98;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+button {
+  padding: 0.6rem 1rem;
+  border: 0;
+  border-radius: 6px;
+  background: #0b6ea8;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.error {
+  margin: 0;
+  color: #e5484d;
+  font-size: 0.9rem;
+}
+
+.estado {
+  padding: 2rem;
+  text-align: center;
+}
+
+.barra {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid #8a8f9855;
+}
+
+.barra .marca {
+  margin-right: auto;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.contenido {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  text-align: left;
+}
