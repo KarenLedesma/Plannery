@@ -1,40 +1,31 @@
-import React, { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
-import { ViajeListComponent } from './features/viajes/ViajeListComponent'
-import { ViajeFormComponent } from './features/viajes/ViajeFormComponent'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { ProtectedRoute } from './features/auth/ProtectedRoute'
+import { LoginPage } from './features/auth/LoginPage'
+import { RegisterPage } from './features/auth/RegisterPage'
+import { Layout } from './shared/Layout'
+import { Inicio } from './shared/Inicio'
 
-function App() {
-  const [view, setView] = useState<'list' | 'form' | 'none'>('none')
-
-  const navigateTo = (view: 'list' | 'form') => {
-    setView(view)
-  }
-
-  const goBack = () => setView('list')
-
+// Cada funcionalidad agrega sus rutas dentro del bloque que le corresponde:
+// - Bloque 1: cualquier persona con sesión (F2 viajes, F4 gastos, F5 resumen).
+// - Bloque 2: solo ADMIN (F3 catálogo).
+export default function App() {
   return (
-    <section id="center">
-      <div className="hero">
-        <img src={heroImg} className="base" width="170" height="179" alt="" />
-        <img src={reactLogo} className="framework" alt="React logo" />
-        <img src={viteLogo} className="vite" alt="Vite logo" />
-      </div>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/registro" element={<RegisterPage />} />
 
-      <nav style={{ marginBottom: '2rem' }}>
-        <button onClick={() => navigateTo('list')} style={{ marginRight: '1rem' }}>Ver Viajes</button>
-        <button onClick={() => navigateTo('form')}>Crear Viaje</button>
-      </nav>
+      <Route element={<ProtectedRoute />}>
+        <Route element={<Layout />}>
+          <Route index element={<Inicio />} />
+          {/* F2, F4 y F5 agregan sus rutas acá */}
+        </Route>
+      </Route>
 
-      {view === 'list' && <ViajeListComponent />}
-      {view === 'form' && <ViajeFormComponent />}
-      {view === 'none' && (
-        <p>Seleccione una opción del menú nav</p>
-      )}
-    </section>
+      <Route element={<ProtectedRoute roles={['ADMIN']} />}>
+        <Route element={<Layout />}>{/* F3 agrega las rutas del catálogo acá */}</Route>
+      </Route>
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   )
 }
-
-export default App
