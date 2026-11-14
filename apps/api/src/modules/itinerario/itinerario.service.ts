@@ -17,7 +17,7 @@ export class ItinerarioService {
     });
   }
 
-  async actualizar(itemId: string, dto: any, usuarioId: string, usuarioCreoId: string) {
+  async actualizar(dto: any, itemId: string, usuarioId: string, usuarioCreoId: string) {
     return this.prisma.itinerarioItem.update({
       where: { id: itemId },
       data: dto,
@@ -30,4 +30,3 @@ export class ItinerarioService {
     });
   }
 }
-ENDSEED

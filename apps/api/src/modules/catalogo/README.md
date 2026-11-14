@@ -1,7 +1,7 @@
 # Módulo catalogo
 
 - **Funcionalidad:** F3 · Catálogo y recomendaciones
-- **Dueña:** (completar)
+- **Dueña:** Agustina Rivoira
 - **Entidades que toca:** Actividad, Destino
 - **Depende de:** F1
 
@@ -17,5 +17,5 @@
 - [ ] Endpoints funcionando con validación de datos (DTOs)
 - [ ] Respuestas 401, 403 y 404 correctas según corresponda
 - [ ] Tests de autorización e IDs ajenos
-- [ ] Endpoints documentados en `docs/api.md`
+- [x] Endpoints documentados en `docs/api.md`
 - [ ] La dueña puede explicar cada decisión de este módulo
