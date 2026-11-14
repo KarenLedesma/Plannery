@@ -12,8 +12,8 @@ Cada dueña completa su sección al terminar la funcionalidad (hay una tarea de 
 | `GET/PATCH/DELETE /viajes/:id` | dueño | F2 | hecho |
 | `GET/POST /viajes/:id/itinerario` | dueño | F2 | pendiente |
 | `PATCH/DELETE /viajes/:id/itinerario/:itemId` | dueño | F2 | pendiente |
-| `GET /actividades` | logueado | F3 | pendiente |
-| `POST /actividades`, `PATCH/DELETE /actividades/:id` | solo ADMIN | F3 | pendiente |
+| `GET /actividades` | logueado | F3 | hecho |
+| `POST /actividades`, `PATCH/DELETE /actividades/:id` | solo ADMIN | F3 | hecho |
 | `GET /viajes/:id/recomendaciones` | dueño | F3 | pendiente |
 | `GET/POST /viajes/:id/gastos` | dueño | F4 | pendiente |
 | `PATCH/DELETE /viajes/:id/gastos/:gastoId` | dueño | F4 | pendiente |
@@ -156,25 +156,26 @@ CRUD del catálogo de actividades. Cualquier usuario logueado puede listarlo; so
 #### `GET /actividades` — Listar el catálogo
 - **Acceso:** logueado.
 - **Filtros opcionales (query):** `destinoId` (uuid), `tipo` (`INTERIOR`, `EXTERIOR` o `MIXTA`) y `activa` (`true` o `false`; solo tiene efecto para el ADMIN, los viajeros siempre reciben las activas).
+- **Aclaraciones:** Un viajero nunca recibe actividades archivadas, aunque envíe ?activa=false.
 - **Respuesta (200):** lista ordenada por nombre.
   ```json
   [
-    {
-      "id": "uuid",
-      "destinoId": "uuid",
-      "nombre": "Obelisco",
-      "descripcion": "Monumento de 67 metros...",
-      "tipo": "EXTERIOR",
-      "categoria": null,
-      "direccion": "Av. 9 de Julio y Av. Corrientes",
-      "latitud": null,
-      "longitud": null,
-      "fuente": "caba-datos-abiertos",
-      "fuenteId": "sitios_de_interes|122",
-      "relevadoEn": "2007-12-01",
-      "activa": true,
-      "creadoEn": "2026-11-12T12:00:00.000Z"
-    }
+  {
+    "id": "uuid",
+    "destinoId": "uuid",
+    "nombre": "Actividad con coordenadas",
+    "descripcion": "Texto de prueba",
+    "tipo": "EXTERIOR",
+    "categoria": null,
+    "direccion": null,
+    "latitud": -34.6037,
+    "longitud": -58.3816,
+    "fuente": null,
+    "fuenteId": null,
+    "relevadoEn": null,
+    "activa": true,
+    "creadoEn": "2026-11-13T23:38:43.878Z"
+  }
   ]
   ```
 - **Errores:** **400** si un filtro es inválido, **401** sin sesión válida.
