@@ -14,8 +14,8 @@
 - Si la actividad está en algún itinerario, el borrado la archiva (`activa = false`) en vez de eliminarla.
 
 ## Definición de terminado
-- [ ] Endpoints funcionando con validación de datos (DTOs)
-- [ ] Respuestas 401, 403 y 404 correctas según corresponda
+- [x] Endpoints funcionando con validación de datos (DTOs)
+- [x] Respuestas 401, 403 y 404 correctas según corresponda
 - [ ] Tests de autorización e IDs ajenos
 - [x] Endpoints documentados en `docs/api.md`
 - [ ] La dueña puede explicar cada decisión de este módulo
