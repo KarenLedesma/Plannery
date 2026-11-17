@@ -10,6 +10,8 @@ const POR_DIA = 5
 const ETIQUETA_DIA = { BUENO: 'Día bueno', LLUVIOSO: 'Día lluvioso', EXTREMO: 'Clima extremo' } as const
 const ETIQUETA_TIPO = { INTERIOR: 'Interior', EXTERIOR: 'Exterior', MIXTA: 'Mixta' } as const
 
+const capitalizar = (texto: string) => texto.charAt(0).toUpperCase() + texto.slice(1)
+
 // "2026-11-17" -> "martes, 17 de noviembre". Se usa el mediodía en UTC para que la fecha no se corra un día.
 function formatearFecha(fecha: string) {
   return new Date(`${fecha}T12:00:00Z`).toLocaleDateString('es-AR', {
@@ -28,7 +30,7 @@ function DiaTarjeta({ dia }: { dia: DiaRecomendado }) {
   return (
     <article className={`dia dia-${clima.tipoDia.toLowerCase()}`}>
       <header>
-        <h3>{formatearFecha(dia.fecha)}</h3>
+        <h3>{capitalizar(formatearFecha(dia.fecha))}</h3>
         <span className="etiqueta">{ETIQUETA_DIA[clima.tipoDia]}</span>
       </header>
       <p className="clima">

@@ -2,7 +2,7 @@
 .recomendaciones .dias { display: grid; gap: 1rem; }
 .recomendaciones .dia { border: 1px solid #ddd; border-left-width: 6px; border-radius: 8px; padding: 1rem; background: #fff; }
 .recomendaciones .dia header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-.recomendaciones .dia h3 { margin: 0; text-transform: capitalize; }
+.recomendaciones .dia h3 { margin: 0;}
 .recomendaciones .dia-bueno { border-left-color: #2e7d32; }
 .recomendaciones .dia-lluvioso { border-left-color: #1565c0; }
 .recomendaciones .dia-extremo { border-left-color: #c62828; }
