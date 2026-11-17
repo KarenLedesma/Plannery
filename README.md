@@ -37,7 +37,8 @@ Requisitos: Node.js 20 o superior, pnpm y una base PostgreSQL.
 3. `copy apps\api\.env.example apps\api\.env` y completar las variables
 4. `pnpm --filter api exec prisma migrate dev` (crea las tablas)
 5. `pnpm --filter api seed` (carga los usuarios de prueba y el destino)
-6. `pnpm dev:api` (API en http://localhost:3000) y, en otra terminal, `pnpm dev:web` (web en http://localhost:5173)
+6. `pnpm --filter api import:catalogo` (carga las 30 actividades del catálogo; necesita el destino del paso anterior)
+7. `pnpm dev:api` (API en http://localhost:3000) y, en otra terminal, `pnpm dev:web` (web en http://localhost:5173)
 
 ## Equipo
 - Nombre Apellido: (a completar con quién hizo qué)

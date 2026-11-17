@@ -4,6 +4,7 @@ export interface LugarExterno {
   fuente: string;
   fuenteId: string;
   nombre: string;
+  tipo?: 'INTERIOR' | 'EXTERIOR' | 'MIXTA';
   descripcion?: string;
   categoria?: string;
   direccion?: string;
