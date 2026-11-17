@@ -1,0 +1,16 @@
+.recomendaciones { max-width: 900px; margin: 0 auto; padding: 1rem; }
+.recomendaciones .dias { display: grid; gap: 1rem; }
+.recomendaciones .dia { border: 1px solid #ddd; border-left-width: 6px; border-radius: 8px; padding: 1rem; background: #fff; }
+.recomendaciones .dia header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.recomendaciones .dia h3 { margin: 0; text-transform: capitalize; }
+.recomendaciones .dia-bueno { border-left-color: #2e7d32; }
+.recomendaciones .dia-lluvioso { border-left-color: #1565c0; }
+.recomendaciones .dia-extremo { border-left-color: #c62828; }
+.recomendaciones .etiqueta { font-size: 0.85rem; font-weight: 600; }
+.recomendaciones .clima { color: #444; }
+.recomendaciones ul { list-style: none; padding: 0; margin: 0.5rem 0; }
+.recomendaciones li { padding: 0.5rem 0; border-top: 1px solid #eee; }
+.recomendaciones .tipo { font-size: 0.8rem; background: #eef; border-radius: 4px; padding: 0 0.4rem; }
+.recomendaciones .direccion { color: #555; font-size: 0.9rem; }
+.recomendaciones .error { color: #b00020; }
+.recomendaciones .aviso { color: #555; font-style: italic; }
