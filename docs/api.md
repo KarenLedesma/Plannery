@@ -14,7 +14,7 @@ Cada dueña completa su sección al terminar la funcionalidad (hay una tarea de 
 | `PATCH/DELETE /viajes/:id/itinerario/:itemId` | dueño | F2 | pendiente |
 | `GET /actividades` | logueado | F3 | hecho |
 | `POST /actividades`, `PATCH/DELETE /actividades/:id` | solo ADMIN | F3 | hecho |
-| `GET /viajes/:id/recomendaciones` | dueño | F3 | pendiente |
+| `GET /viajes/:id/recomendaciones` | dueño | F3 | hecho |
 | `GET/POST /viajes/:id/gastos` | dueño | F4 | pendiente |
 | `PATCH/DELETE /viajes/:id/gastos/:gastoId` | dueño | F4 | pendiente |
 | `GET /viajes/:id/gastos/comparacion` | dueño | F4 | pendiente |
@@ -73,6 +73,35 @@ CRUD de viajes con aislamiento de datos por usuario. Cada viajero ve y modifica 
 - **Errores:**
   - **400** si `:id` no es UUID.
   - **404** si el viaje no existe o no pertenece al usuario (misma respuesta que si no existiera, para no revelar información).
+
+#### `GET /viajes/:id/recomendaciones` — Recomendaciones según el pronóstico
+- **Acceso:** logueado, solo el dueño del viaje.
+- **Cómo funciona:** consulta el pronóstico del destino para las fechas del viaje, clasifica
+  cada día (`BUENO`, `LLUVIOSO` si la probabilidad de lluvia es de 50 % o más, o `EXTREMO` si
+  la máxima es de 32 °C o más, o menor de 8 °C) y recomienda las actividades activas que
+  convienen: las de interior siempre, las mixtas salvo en clima extremo y las de exterior solo
+  en días buenos. Las recomendaciones salen ordenadas, con lo más adecuado primero.
+- **Respuesta (200):**
+  ```json
+  {
+    "viajeId": "uuid",
+    "destino": "Ciudad de Buenos Aires",
+    "dias": [
+      {
+        "fecha": "2026-11-17",
+        "clima": { "tempMax": 27.4, "tempMin": 19.5, "probLluvia": 96, "tipoDia": "LLUVIOSO" },
+        "actividades": [
+          { "id": "uuid", "nombre": "Museo de prueba", "descripcion": null, "tipo": "INTERIOR", "direccion": null }
+        ]
+      }
+    ],
+    "sinPronostico": []
+  }
+  ```
+  `sinPronostico` lista las fechas del viaje que superan el alcance del servicio de clima
+  (unos 16 días desde hoy).
+- **Errores:** **400** si el `id` no es un UUID, **401** sin sesión, **404** si el viaje no
+  existe o es de otra persona, **503** si el servicio de clima no responde.
 
 #### `PATCH /viajes/:id` — Editar un viaje
 - **Acceso:** dueño del viaje.
