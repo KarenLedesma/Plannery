@@ -4,6 +4,7 @@ import { LoginPage } from './features/auth/LoginPage'
 import { RegisterPage } from './features/auth/RegisterPage'
 import { Layout } from './shared/Layout'
 import { Inicio } from './shared/Inicio'
+import { RecomendacionesPage } from './features/recomendaciones/RecomendacionesPage'
 
 // Cada funcionalidad agrega sus rutas dentro del bloque que le corresponde:
 // - Bloque 1: cualquier persona con sesión (F2 viajes, F4 gastos, F5 resumen).
@@ -18,6 +19,7 @@ export default function App() {
         <Route element={<Layout />}>
           <Route index element={<Inicio />} />
           {/* F2, F4 y F5 agregan sus rutas acá */}
+          <Route path="viajes/:id/recomendaciones" element={<RecomendacionesPage />} />
         </Route>
       </Route>
 
