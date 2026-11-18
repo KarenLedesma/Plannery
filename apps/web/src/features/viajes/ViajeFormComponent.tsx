@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { crearViaje, type CrearViajeDto, type Viaje } from './viajes.service';
+import { crearViaje, type CrearViajeDto } from './viajes.service';
 
 export const ViajeFormComponent: React.FC = () => {
   const [datos, setDatos] = useState<CrearViajeDto>({
@@ -22,7 +22,8 @@ export const ViajeFormComponent: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const creado = await crearViaje(datos);
+      // El input entrega texto: el backend espera el presupuesto como número
+      await crearViaje({ ...datos, presupuesto: Number(datos.presupuesto) });
       setExito(true);
       setDatos({
         nombre: '',
