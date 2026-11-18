@@ -19,6 +19,8 @@ Cada dueña completa su sección al terminar la funcionalidad (hay una tarea de 
 | `PATCH/DELETE /viajes/:id/gastos/:gastoId` | dueño | F4 | pendiente |
 | `GET /viajes/:id/gastos/comparacion` | dueño | F4 | pendiente |
 | `POST /viajes/:id/resumen` | dueño | F5 | pendiente |
+| `GET/POST /viajes/:id/itinerario` | dueño | F2-04 | hecho |
+| `PATCH/DELETE /viajes/:id/itinerario/:itemId` | dueño | F2-04 | hecho |
 
 ## F2 · Viajes (F2-01)
 
@@ -130,6 +132,54 @@ CRUD de viajes con aislamiento de datos por usuario. Cada viajero ve y modifica 
 | **400** | Datos de request inválidos (DTO validation failed, formato de fecha incorrecto, `presupuesto` negativo, `id` no UUID, validación de negocio fallida). | `{ "statusCode": 400, "message": "Bad request ...", ... }` |
 | **404** | Recurso solicitado no existe o el usuario no es dueño (viaje/año destino ajeno). Se devuelve 404 igual que si no existiera, para no filtrar qué rutas/recursos hay en el sistema. | `{ "statusCode": 404, "message": "Not found" }` |
 
+#### `GET /viajes/:id/itinerario` — Listar ítems del itinerario por día
+- **Acceso:** dueño del viaje (el `id` debe pertenecer al usuario logueado).
+- **Parametro:** `:id` debe ser UUID válido (sino **400**).
+- **Respuesta (200):** lista de items de itinerario ordenados por fecha.
+- **Errores:**
+  - **400** si `:id` no es UUID.
+  - **404** si el viaje no existe o no pertenece al usuario.
+
+#### `POST /viajes/:id/itinerario` — Crear un item de itinerario
+- **Acceso:** dueño del viaje.
+- **Cuerpo (201):**
+  ```json
+  { "actividadId": "uuid", "fecha": "2026-11-20" }
+  ```
+- **Validaciones:**
+  - `actividadId`: debe existir en la tabla `actividades`.
+  - `fecha`: formato `YYYY-MM-DD`.
+- **Errores:**
+  - **400** si los datos son inválidos o la actividad no existe.
+  - **401** sin sesión.
+  - **404** si el viaje no existe o es de otra persona.
+
+#### `PATCH /viajes/:id/itinerario/:itemId` — Actualizar un item de itinerario
+- **Acceso:** dueño del viaje.
+- **Parametros:** `:id` UUID obligatorio, `:itemId` UUID obligatorio.
+- **Cuerpo opcional:** cualquiera de los campos del `CrearItinerarioDto` (`actividadId`, `fecha`).
+- **Validación especial:** si el cuerpo incluye `fecha`, se valida el formato `YYYY-MM-DD`.
+- **Respuesta (200):** item de itinerario actualizado.
+- **Errores:**
+  - **400** datos inválidos o `id` inválidos.
+  - **404** item ajeno o inexistente.
+
+#### `DELETE /viajes/:id/itinerario/:itemId` — Eliminar un item de itinerario
+- **Acceso:** dueño del viaje.
+- **Parametros:** `:id` UUID obligatorio, `:itemId` UUID obligatorio.
+- **Respuesta (200):** `{ "message": "Itinerario item eliminado" }` (o vacío).
+- **Errores:**
+  - **400** si `:id` o `:itemId` no son UUID.
+  - **404** item ajeno o inexistente.
+
+### Errores generales (todos los endpoints de F2)
+
+| Código | Cuándo ocurre | Cuerpo de respuesta |
+|---|---|---|
+| **401** | Falta la cookie `token`, o el token es inválido/vencido. | `{ "statusCode": 401, "message": "Unauthorized" }` |
+| **400** | Datos de request inválidos (DTO validation failed, formato de fecha incorrecto, `presupuesto` negativo, `id` no UUID, validación de negocio fallida). | `{ "statusCode": 400, "message": "Bad request ...", ... }` |
+| **404** | Recurso solicitado no existe o el usuario no es dueño (viaje/año destino ajeno). Se devuelve 404 igual que si no existiera, para no filtrar qué rutas/recursos hay en el sistema. | `{ "statusCode": 404, "message": "Not found" }` |
+
 ### Respuesta modelo (viaje individual)
 Cada viaje devuelto por la API incluye:
 
@@ -229,3 +279,75 @@ CRUD del catálogo de actividades. Cualquier usuario logueado puede listarlo; so
 - **Comportamiento:** si la actividad está en algún itinerario, se archiva; si no, se elimina.
 - **Respuesta (200):** `{ "id": "uuid", "accion": "archivada" }` o `{ "id": "uuid", "accion": "eliminada" }`.
 - **Errores:** **400** si el `id` no es válido, **401**, **403**, **404** si no existe.
+
+## F2 · Itinerario por día (F2-04)
+
+### Resumen
+Itinerario por día asociado a un viaje. Cada user puede ver y modificar solo su propio itinerario. Los endpoints permiten listar items por día, crear nuevos items y actualizar/eliminarlos. La funcionalidad depende del CRUD de viajes (F2-01) y del catálogo de actividades (F3-01).
+
+### Endpoints
+
+#### `GET /viajes/:id/itinerario` — Listar ítems del itinerario por día
+- **Acceso:** dueño del viaje (el `id` debe pertenecer al usuario logueado).
+- **Parametro:** `:id` debe ser UUID válido (sino **400**).
+- **Respuesta (200):** lista de items de itinerario ordenados por fecha.
+- **Errores:**
+  - **400** si `:id` no es UUID.
+  - **404** si el viaje no existe o no pertenece al usuario.
+
+#### `POST /viajes/:id/itinerario` — Crear un item de itinerario
+- **Acceso:** dueño del viaje.
+- **Cuerpo (201):**
+  ```json
+  { "actividadId": "uuid", "fecha": "2026-11-20" }
+  ```
+- **Validaciones:**
+  - `actividadId`: debe existir en la tabla `actividades`.
+  - `fecha`: formato `YYYY-MM-DD`.
+- **Errores:**
+  - **400** si los datos son inválidos o la actividad no existe.
+  - **401** sin sesión.
+  - **404** si el viaje no existe o es de otra persona.
+
+#### `PATCH /viajes/:id/itinerario/:itemId` — Actualizar un item de itinerario
+- **Acceso:** dueño del viaje.
+- **Parametros:** `:id` UUID obligatorio, `:itemId` UUID obligatorio.
+- **Cuerpo opcional:** cualquiera de los campos del `CrearItinerarioDto` (`actividadId`, `fecha`).
+- **Validación especial:** si el cuerpo incluye `fecha`, se valida el formato `YYYY-MM-DD`.
+- **Respuesta (200):** item de itinerario actualizado.
+- **Errores:**
+  - **400** datos inválidos o `id` inválidos.
+  - **404** item ajeno o inexistente.
+
+#### `DELETE /viajes/:id/itinerario/:itemId` — Eliminar un item de itinerario
+- **Acceso:** dueño del viaje.
+- **Parametros:** `:id` UUID obligatorio, `:itemId` UUID obligatorio.
+- **Respuesta (200):** `{ "message": "Itinerario item eliminado" }` (o vacío).
+- **Errores:**
+  - **400** si `:id` o `:itemId` no son UUID.
+  - **404** item ajeno o inexistente.
+
+### Cambios implementados en esta funcionalidad (F2-04)
+
+| Archivo | Acción |
+|---|---|
+| `apps/api/src/modules/itinerario/itinerario.controller.ts` | **Creado** — Controlador con endpoints `GET/POST /viajes/:id/itinerario` y `PATCH/DELETE /viajes/:id/itinerario/:itemId`, usando `JwtAuthGuard`. |
+| `apps/api/src/modules/itinerario/itinerario.service.ts` | **Creado** — Servicio con lógica CRUD y validaciones básicas, importando `AuthModule`. |
+| `apps/api/src/modules/itinerario/itinerario.dto.ts` | **Creado** — DTOs `CrearItinerarioDto` y `ActualizarItinerarioDto` con validaciones `class-validator`. |
+| `apps/api/src/modules/itinerario/itinerario.module.ts` | **Creado** — Módulo que importa `AuthModule` y declara controller + service. |
+| `apps/web/src/features/itinerario/itinerario.service.ts` | **Creado** — Service frontend con `listarItinerario` y `crearItinerario` funciones que consumen la API. |
+| `apps/web/src/features/itinerario/ItinerarioFormComponent.tsx` | **Actualizado** — Formulario para crear items de itinerario, conectado al service frontend. |
+| `apps/web/src/features/itinerario/ItinerarioListComponent.tsx` | **Actualizado** — Lista de items de itinerario, conectada al service frontend. |
+| `apps/web/src/features/itinerario/itinerario.service.spec.ts` | **Creado** — Tests unitarios con Vitest que espiando las llamadas API. |
+| `apps/api/src/modules/viajes/viajes.service.spec.ts` | **Creado/Actualizado** — Tests backend con Jest/NestJS que cubren CRUD de viajes. |
+| `docs/api.md` | **Modificado** — Se añadió la sección completa “F2 · Itinerario por día (F2-04)” con descripción de endpoints, cuerpos, respuestas y códigos de error. |
+| `package.json` (api) | **Sin cambios** — Ya estaban las dependencias necesarias (`@nestjs/jwt`, `class-validator`, `class-transformer`). |
+| `package.json` (web) | **Sin cambios** — Ya estaban las dependencias de Axios/Fetch para consumir la API. |
+
+### Resumen técnico
+- **Autenticación:** `JwtAuthGuard` (cookie `token`, 24 h de vencimiento). Las rutas de itinerario usan el guard, filtrando por `usuarioId` obtenido del token.
+- **Aislamiento:** todo endpoint de itinerario filtra por `usuarioId` obtenido del token (`@CurrentUser()`). Itinerarios ajenos responden **404**.
+- **Dependencias:** F2-04 depende de F2-01 (CRUD viajes) y F3-01 (CRUD catálogo de actividades).
+- **Cascade:** la eliminación de un viaje borra en cascada sus `ItinerarioItem` por definición del esquema Prisma (`onDelete: Cascade`).
+
+---
