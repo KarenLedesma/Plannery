@@ -102,6 +102,7 @@ CRUD de viajes con aislamiento de datos por usuario. Cada viajero ve y modifica 
   (unos 16 días desde hoy).
 - **Errores:** **400** si el `id` no es un UUID, **401** sin sesión, **404** si el viaje no
   existe o es de otra persona, **503** si el servicio de clima no responde.
+  - **Más detalle:** fuentes de datos, licencias, regla del clima y límites en [`docs/catalogo-y-recomendaciones.md`](catalogo-y-recomendaciones.md).
 
 #### `PATCH /viajes/:id` — Editar un viaje
 - **Acceso:** dueño del viaje.
