@@ -14,3 +14,8 @@
 .recomendaciones .direccion { color: #555; font-size: 0.9rem; }
 .recomendaciones .error { color: #b00020; }
 .recomendaciones .aviso { color: #555; font-style: italic; }
+.atribucion {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: #666;
+}

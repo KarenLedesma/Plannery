@@ -104,6 +104,10 @@ export function RecomendacionesPage() {
               cubre unos 16 días desde hoy.
             </p>
           )}
+          <p className="atribucion">
+            Pronóstico: <a href="https://open-meteo.com" target="_blank" rel="noreferrer">Open-Meteo.com</a> (CC BY 4.0).
+            Lugares: BA Data, Gobierno de la Ciudad de Buenos Aires.
+          </p>
         </>
       )}
     </section>
