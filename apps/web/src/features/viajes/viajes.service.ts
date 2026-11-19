@@ -1,32 +1,7 @@
-export interface Viaje {
-  id: string;
-  nombre: string;
-  destinoId: string;
-  fechaInicio: string;
-  fechaFin: string;
-  presupuesto: number;
-  creadoEn: string;
-}
+import type { Viaje, CrearViajeDto, ItinerarioDia, CrearItinerarioDto } from './tipos';
 
-export interface CrearViajeDto {
-  nombre: string;
-  destinoId: string;
-  fechaInicio: string;
-  fechaFin: string;
-  presupuesto: number;
-}
-
-export interface ItinerarioDia {
-  id: string;
-  actividadId: string;
-  fecha: string;
-  notas?: string;
-}
-
-export interface CrearItinerarioDto {
-  actividadId: string;
-  fecha: string;
-}
+// Los tipos viven en tipos.ts. Se re-exportan acá para no romper los imports que ya existen.
+export type { Viaje, CrearViajeDto, ItinerarioDia, CrearItinerarioDto } from './tipos';
 
 const API_BASE = '/api';
 

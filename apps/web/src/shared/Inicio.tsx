@@ -1,6 +1,6 @@
 import { useAuth } from '../features/auth/useAuth'
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { listarViajes, type Viaje } from '../features/viajes/viajes.service'
 
 // Helper para categorizar un viaje
@@ -14,7 +14,6 @@ const categorizarViaje = (viaje: Viaje, hoy: Date) => {
 
 export function Inicio() {
   const { usuario } = useAuth()
-  const navigate = useNavigate()
 
   const [viajes, setViajes] = useState<Viaje[]>([])
   const [cargar, setCargar] = useState(true)
@@ -23,7 +22,8 @@ export function Inicio() {
   useEffect(() => {
     async function cargarViajes() {
       try {
-        const data = await listarViajes(usuario?.id)
+        // El backend filtra por la sesión (cookie): no hace falta mandar el id del usuario
+        const data = await listarViajes()
         setViajes(data)
       } catch (e: any) {
         setError(e.message)

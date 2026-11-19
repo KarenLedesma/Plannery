@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { crearViaje, type CrearViajeDto, type Viaje } from './viajes.service'
+import { crearViaje, type CrearViajeDto } from './viajes.service'
 
 type Destino = {
   id: string
   nombre: string
 }
 
-export function ViajeFormComponent: React.FC = () => {
+export function ViajeFormComponent() {
   const [datos, setDatos] = useState<CrearViajeDto>({
     nombre: '',
     destinoId: '',
@@ -56,7 +56,8 @@ export function ViajeFormComponent: React.FC = () => {
     }
 
     try {
-      const creado = await crearViaje(datos)
+      // El input entrega texto: el backend espera el presupuesto como número
+      await crearViaje({ ...datos, presupuesto: Number(datos.presupuesto) })
       setExito(true)
       setDatos({
         nombre: '',
@@ -91,6 +92,7 @@ export function ViajeFormComponent: React.FC = () => {
         <div>
           <label>Destino *</label>
           <select
+            value={datos.destinoId}
             onChange={(e) => setDatos({ ...datos, destinoId: e.target.value } as any)}
             style={{ width: '100%', marginBottom: '0.5rem' }}
             required
@@ -139,3 +141,4 @@ export function ViajeFormComponent: React.FC = () => {
       </form>
     </section>
   )
+}
