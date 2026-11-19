@@ -11,6 +11,7 @@
 ## Reglas de acceso
 - Solo el dueño del viaje.
 - Usa `WeatherProvider` (`integrations/clima`). Avisa si las fechas superan el alcance del pronóstico.
+- Fuentes, licencias, regla del clima y límites: `docs/catalogo-y-recomendaciones.md`.
 
 ## Definición de terminado
 - [x] Endpoints funcionando con validación de datos (DTOs)
