@@ -91,6 +91,7 @@ export function Inicio() {
             <p><strong>Presupuesto:</strong> {viaje.presupuesto}</p>
             <Link to={`/viajes/${viaje.id}`} style={{ color: 'blue', textDecoration: 'underline' }}>Ver detalle</Link>
             <Link to={`/viajes/${viaje.id}/itinerario`} style={{ marginLeft: '1rem', color: 'green', textDecoration: 'none' }}>Modificar Itinerario</Link>
+            <Link to={`/viajes/${viaje.id}/recomendaciones`} style={{ marginLeft: '1rem', color: '#6d28d9', textDecoration: 'none' }}>Ver recomendaciones</Link>
           </li>
         ))}
       </ul>
