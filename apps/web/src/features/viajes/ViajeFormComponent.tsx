@@ -1,43 +1,77 @@
-import React, { useState } from 'react';
-import { crearViaje, type CrearViajeDto } from './viajes.service';
+import React, { useState, useEffect } from 'react'
+import { crearViaje, type CrearViajeDto } from './viajes.service'
 
-export const ViajeFormComponent: React.FC = () => {
+type Destino = {
+  id: string
+  nombre: string
+}
+
+export function ViajeFormComponent() {
   const [datos, setDatos] = useState<CrearViajeDto>({
     nombre: '',
     destinoId: '',
     fechaInicio: '',
     fechaFin: '',
     presupuesto: 0,
-  });
-  const [exito, setExito] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  })
+  const [exito, setExito] = useState<boolean | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [destinos, setDestinos] = useState<Destino[]>([])
 
   const manejarCambio = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDatos({ ...datos, [e.target.name]: e.target.value as any } as CrearViajeDto);
-  };
+    setDatos({ ...datos, [e.target.name]: e.target.value as any } as CrearViajeDto)
+  }
+
+  const cargarDestinos = async () => {
+    try {
+      const respuesta = await fetch('/api/destinos', {
+        credentials: 'include',
+      })
+      const destinos = await respuesta.json()
+      if (!Array.isArray(destinos)) {
+        console.warn('Expected destinations array but got:', destinos)
+        setDestinos([])
+        return
+      }
+      setDestinos(destinos)
+    } catch (e: any) {
+      setError(e.message)
+    }
+  }
+
+  useEffect(() => {
+    cargarDestinos()
+  }, [])
 
   const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+
+    if (!datos.destinoId) {
+      setError('Por favor, selecciona un destino o ingresa un destinoId válido')
+      setLoading(false)
+      return
+    }
+
     try {
       // El input entrega texto: el backend espera el presupuesto como número
-      await crearViaje({ ...datos, presupuesto: Number(datos.presupuesto) });
-      setExito(true);
+      await crearViaje({ ...datos, presupuesto: Number(datos.presupuesto) })
+      setExito(true)
       setDatos({
         nombre: '',
         destinoId: '',
         fechaInicio: '',
         fechaFin: '',
         presupuesto: 0,
-      });
+      })
     } catch (e: any) {
-      setError(e.message);
+      setError(e.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <section>
@@ -56,14 +90,20 @@ export const ViajeFormComponent: React.FC = () => {
           />
         </div>
         <div>
-          <label>Destino ID *</label>
-          <input
-            type="text"
-            name="destinoId"
+          <label>Destino *</label>
+          <select
             value={datos.destinoId}
-            onChange={manejarCambio}
+            onChange={(e) => setDatos({ ...datos, destinoId: e.target.value } as any)}
+            style={{ width: '100%', marginBottom: '0.5rem' }}
             required
-          />
+          >
+            <option value="">-- Seleccionar destino --</option>
+            {destinos.map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.nombre}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <label>Fecha Inicio *</label>
@@ -100,5 +140,5 @@ export const ViajeFormComponent: React.FC = () => {
         </button>
       </form>
     </section>
-  );
-};
+  )
+}
