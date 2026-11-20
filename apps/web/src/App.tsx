@@ -5,6 +5,7 @@ import { RegisterPage } from './features/auth/RegisterPage'
 import { Layout } from './shared/Layout'
 import { Inicio } from './shared/Inicio'
 import { RecomendacionesPage } from './features/recomendaciones/RecomendacionesPage'
+import { CatalogoAdminPage } from './features/catalogo/CatalogoAdminPage'
 
 // Cada funcionalidad agrega sus rutas dentro del bloque que le corresponde:
 // - Bloque 1: cualquier persona con sesión (F2 viajes, F4 gastos, F5 resumen).
@@ -24,7 +25,9 @@ export default function App() {
       </Route>
 
       <Route element={<ProtectedRoute roles={['ADMIN']} />}>
-        <Route element={<Layout />}>{/* F3 agrega las rutas del catálogo acá */}</Route>
+        <Route element={<Layout />}>
+          <Route path="admin/catalogo" element={<CatalogoAdminPage />} />
+        </Route>
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

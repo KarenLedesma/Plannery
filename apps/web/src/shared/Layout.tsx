@@ -11,6 +11,12 @@ export function Layout() {
         <Link to="/" className="marca">
           Plannery
         </Link>
+
+        {usuario?.rol === 'ADMIN' && (
+        <Link to="/admin/catalogo" className="enlace-barra">
+          Catálogo
+        </Link>
+        )}
         <span>
           {usuario?.nombre} · {usuario?.rol === 'ADMIN' ? 'Administrador/a' : 'Viajero/a'}
         </span>
