@@ -1,0 +1,23 @@
+.catalogo-admin { max-width: 960px; }
+.catalogo-ayuda { color: #4a5568; margin-bottom: 1rem; }
+
+.catalogo-filtros { display: flex; gap: 1rem; margin-bottom: 1rem; }
+.catalogo-filtros label { display: flex; flex-direction: column; gap: 0.25rem; font-weight: 600; color: #1f2a3a; }
+.catalogo-filtros select { padding: 0.45rem 0.6rem; border: 1px solid #d9ccb4; border-radius: 8px; background: #ffffff; color: #1f2a3a; }
+
+.catalogo-cuenta { color: #4a5568; margin-bottom: 0.5rem; }
+.catalogo-aviso { padding: 0.6rem 0.9rem; border-radius: 8px; background: #efe6d6; color: #1f2a3a; }
+.catalogo-error { padding: 0.6rem 0.9rem; border-radius: 8px; background: #fbe3dc; color: #7a2410; }
+
+.catalogo-tabla { width: 100%; border-collapse: collapse; background: #ffffff; border-radius: 12px; overflow: hidden; }
+.catalogo-tabla th { text-align: left; padding: 0.7rem 0.9rem; background: #efe6d6; color: #1f2a3a; }
+.catalogo-tabla td { padding: 0.65rem 0.9rem; border-top: 1px solid #efe6d6; color: #1f2a3a; }
+
+.catalogo-sello { padding: 0.15rem 0.6rem; border-radius: 999px; background: #d6ecf8; color: #12507a; font-size: 0.85rem; font-weight: 600; }
+.catalogo-sello.archivada { background: #efe6d6; color: #4a5568; }
+
+.catalogo-borrar { padding: 0.35rem 0.8rem; border: 0; border-radius: 8px; background: #c8431b; color: #ffffff; cursor: pointer; }
+.catalogo-borrar:hover { background: #a93815; }
+
+.barra .enlace-barra { color: #1b6fa8; font-weight: 600; text-decoration: none; }
+.barra .enlace-barra:hover { text-decoration: underline; }
