@@ -16,6 +16,6 @@
 ## Definición de terminado
 - [x] Endpoints funcionando con validación de datos (DTOs)
 - [x] Respuestas 401, 403 y 404 correctas según corresponda
-- [ ] Tests de autorización e IDs ajenos
+- [x] Tests de autorización e IDs ajenos
 - [x] Endpoints documentados en `docs/api.md`
 - [x] La dueña puede explicar cada decisión de este módulo
