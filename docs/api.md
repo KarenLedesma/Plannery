@@ -230,3 +230,14 @@ CRUD del catálogo de actividades. Cualquier usuario logueado puede listarlo; so
 - **Comportamiento:** si la actividad está en algún itinerario, se archiva; si no, se elimina.
 - **Respuesta (200):** `{ "id": "uuid", "accion": "archivada" }` o `{ "id": "uuid", "accion": "eliminada" }`.
 - **Errores:** **400** si el `id` no es válido, **401**, **403**, **404** si no existe.
+
+#### `GET /destinos` — Listar los destinos
+- **Acceso:** logueado (cualquier rol).
+- **Uso:** alimenta los selectores de destino de las pantallas (formulario del catálogo y, más adelante, el de viajes). Son datos de consulta, sin dueño.
+- **Respuesta (200):** lista ordenada por nombre. Solo devuelve `id`, `nombre` y `slug`.
+  ```json
+  [
+    { "id": "uuid", "nombre": "Ciudad de Buenos Aires", "slug": "caba" }
+  ]
+  ```
+- **Errores:** **401** sin sesión válida.
