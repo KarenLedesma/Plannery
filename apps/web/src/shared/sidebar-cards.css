@@ -270,3 +270,121 @@
   border-radius: 10px;
   font-size: 0.9rem;
 }
+
+/* Pantalla de inicio */
+.pl-inicio-titulo {
+  margin: 0 0 0.25rem;
+  font-size: 2rem;
+}
+
+.pl-inicio-sub {
+  margin: 0 0 1.5rem;
+  color: #57534e;
+}
+
+.pl-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.pl-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pl-filtro {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid #e4ddd0;
+  border-radius: 8px;
+  background: transparent;
+  color: #1e293b;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.18s, border-color 0.18s;
+}
+
+.pl-filtro:hover {
+  background: #ffffff;
+}
+
+.pl-filtro.activo {
+  border-color: #164e78;
+  background: #ffffff;
+  color: #164e78;
+  font-weight: 600;
+}
+
+.pl-btn-nuevo {
+  padding: 0.55rem 1.1rem;
+  background: #164e78;
+  color: #ffffff !important;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: background-color 0.18s;
+}
+
+.pl-btn-nuevo:hover {
+  background: #103b5c;
+}
+
+/* Tarjeta de viaje: encabezado con etiqueta de estado */
+.pl-viaje-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.pl-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.pl-badge.pendientes {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.pl-badge.en_curso {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.pl-badge.terminados {
+  background: #f2ece1;
+  color: #57534e;
+}
+
+/* Acciones de la tarjeta como botones */
+.pl-viaje-links a {
+  padding: 0.45rem 0.8rem;
+  border: 1px solid #e4ddd0;
+  border-radius: 8px;
+  color: #164e78;
+  text-decoration: none;
+  transition: background-color 0.18s, border-color 0.18s;
+}
+
+.pl-viaje-links a:hover {
+  background: #faf7f2;
+  border-color: #164e78;
+}
+
+.pl-viaje-links a.principal {
+  background: #164e78;
+  border-color: #164e78;
+  color: #ffffff !important;
+}
+
+.pl-viaje-links a.principal:hover {
+  background: #103b5c;
+}

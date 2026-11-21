@@ -3,8 +3,31 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { listarViajes, type Viaje } from '../features/viajes/viajes.service'
 
+type Estado = 'pendientes' | 'en_curso' | 'terminados'
+type Filtro = 'todos' | Estado
+
+const FILTROS: { valor: Filtro; texto: string }[] = [
+  { valor: 'todos', texto: 'Todos' },
+  { valor: 'pendientes', texto: 'Pendientes' },
+  { valor: 'en_curso', texto: 'En curso' },
+  { valor: 'terminados', texto: 'Terminados' },
+]
+
+const ETIQUETAS: Record<Estado, string> = {
+  pendientes: 'Pendiente',
+  en_curso: 'En curso',
+  terminados: 'Terminado',
+}
+
+const MENSAJE_VACIO: Record<Filtro, string> = {
+  todos: 'No tenés viajes registrados.',
+  pendientes: 'No tenés viajes pendientes.',
+  en_curso: 'No tenés viajes en curso.',
+  terminados: 'No tenés viajes terminados.',
+}
+
 // Helper para categorizar un viaje
-const categorizarViaje = (viaje: Viaje, hoy: Date) => {
+const categorizarViaje = (viaje: Viaje, hoy: Date): Estado => {
   const inicio = new Date(viaje.fechaInicio)
   const fin = new Date(viaje.fechaFin)
   if (fin < hoy) return 'terminados'
@@ -18,6 +41,7 @@ export function Inicio() {
   const [viajes, setViajes] = useState<Viaje[]>([])
   const [cargar, setCargar] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [filtro, setFiltro] = useState<Filtro>('todos')
 
   useEffect(() => {
     async function cargarViajes() {
@@ -34,124 +58,73 @@ export function Inicio() {
   }, [])
 
   const hoy = new Date()
-
-  const [filtro, setFiltro] = useState<'todos' | 'pendientes' | 'en_curso' | 'terminados'>('todos')
-  const viajesFiltrados = viajes.filter((viaje) => categorizarViaje(viaje, hoy) === filtro || filtro === 'todos')
+  const viajesFiltrados = viajes.filter(
+    (viaje) => filtro === 'todos' || categorizarViaje(viaje, hoy) === filtro,
+  )
 
   if (cargar) return <p>Cargando...</p>
   if (error) return <p style={{ color: 'red' }}>Error: {error}</p>
 
   return (
     <section>
-      <h1>Hola, {usuario?.nombre}</h1>
-      <p>Iniciaste sesión correctamente. Acá va a aparecer tu lista de viajes.</p>
+      <h1 className="pl-inicio-titulo">Hola, {usuario?.nombre}</h1>
+      <p className="pl-inicio-sub">
+        {viajes.length} {viajes.length === 1 ? 'viaje' : 'viajes'} en total
+      </p>
 
-      <nav aria-label="Filtro de viajes">
-        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
-          <button
-            onClick={() => setFiltro('todos')}
-            style={{
-              padding: '0.35rem 0.75rem',
-              border: filtro === 'todos' ? '1px solid #164e78' : '1px solid #e4ddd0',
-              borderRadius: '8px',
-              background: filtro === 'todos' ? '#ffffff' : 'transparent',
-              fontWeight: filtro === 'todos' ? 600 : 400,
-              cursor: 'pointer'
-            }}
-          >
-            Todos
-          </button>
-          <button
-            onClick={() => setFiltro('pendientes')}
-            style={{
-              padding: '0.35rem 0.75rem',
-              border: filtro === 'pendientes' ? '1px solid #164e78' : '1px solid #e4ddd0',
-              borderRadius: '8px',
-              background: filtro === 'pendientes' ? '#ffffff' : 'transparent',
-              fontWeight: filtro === 'pendientes' ? 600 : 400,
-              cursor: 'pointer'
-            }}
-          >
-            Pendientes
-          </button>
-          <button
-            onClick={() => setFiltro('en_curso')}
-            style={{
-              padding: '0.35rem 0.75rem',
-              border: filtro === 'en_curso' ? '1px solid #164e78' : '1px solid #e4ddd0',
-              borderRadius: '8px',
-              background: filtro === 'en_curso' ? '#ffffff' : 'transparent',
-              fontWeight: filtro === 'en_curso' ? 600 : 400,
-              cursor: 'pointer'
-            }}
-          >
-            En curso
-          </button>
-          <button
-            onClick={() => setFiltro('terminados')}
-            style={{
-              padding: '0.35rem 0.75rem',
-              border: filtro === 'terminados' ? '1px solid #164e78' : '1px solid #e4ddd0',
-              borderRadius: '8px',
-              background: filtro === 'terminados' ? '#ffffff' : 'transparent',
-              fontWeight: filtro === 'terminados' ? 600 : 400,
-              cursor: 'pointer'
-            }}
-          >
-            Terminados
-          </button>
-        </div>
-      </nav>
+      <div className="pl-toolbar">
+        <nav aria-label="Filtro de viajes" className="pl-filtros">
+          {FILTROS.map((f) => (
+            <button
+              key={f.valor}
+              onClick={() => setFiltro(f.valor)}
+              className={filtro === f.valor ? 'pl-filtro activo' : 'pl-filtro'}
+            >
+              {f.texto}
+            </button>
+          ))}
+        </nav>
 
-      <Link
-        to="/viajes/nuevo"
-        style={{
-          marginBottom: '1rem',
-          display: 'inline-block',
-          padding: '0.55rem 1.1rem',
-          background: '#164e78',
-          color: 'white',
-          textDecoration: 'none',
-          borderRadius: '8px',
-          fontWeight: 600
-        }}
-      >
-        Nuevo Viaje
-      </Link>
+        <Link to="/viajes/nuevo" className="pl-btn-nuevo">
+          + Nuevo viaje
+        </Link>
+      </div>
 
       {viajesFiltrados.length === 0 && (
-        <p style={{ color: 'gray' }}>
-          No tienes viajes {filtro === 'todos' ? 'registrados' : filtro === 'pendientes' ? 'pendientes' : filtro === 'en_curso' ? 'en curso' : 'terminados'}.
-        </p>
+        <p style={{ color: 'gray', marginTop: '1.5rem' }}>{MENSAJE_VACIO[filtro]}</p>
       )}
 
       <ul className="pl-viajes-grid">
-        {viajesFiltrados.map((viaje) => (
-          <li key={viaje.id} className="pl-viaje-card">
-            <div>
-              <h3 className="pl-viaje-title">{viaje.nombre}</h3>
-              <p className="pl-viaje-meta">
-                <strong>Destino:</strong> {viaje.destino?.nombre ?? viaje.destinoId}
-              </p>
-              <p className="pl-viaje-meta">
-                <strong>Fechas:</strong> {viaje.fechaInicio?.slice(0, 10)} - {viaje.fechaFin?.slice(0, 10)}
-              </p>
-              <p className="pl-viaje-meta">
-                <strong>Presupuesto:</strong> ${viaje.presupuesto}
-              </p>
-            </div>
+        {viajesFiltrados.map((viaje) => {
+          const estado = categorizarViaje(viaje, hoy)
+          return (
+            <li key={viaje.id} className="pl-viaje-card">
+              <div>
+                <div className="pl-viaje-head">
+                  <h3 className="pl-viaje-title">{viaje.nombre}</h3>
+                  <span className={`pl-badge ${estado}`}>{ETIQUETAS[estado]}</span>
+                </div>
+                <p className="pl-viaje-meta">
+                  <strong>Destino:</strong> {viaje.destino?.nombre ?? viaje.destinoId}
+                </p>
+                <p className="pl-viaje-meta">
+                  <strong>Fechas:</strong> {viaje.fechaInicio?.slice(0, 10)} - {viaje.fechaFin?.slice(0, 10)}
+                </p>
+                <p className="pl-viaje-meta">
+                  <strong>Presupuesto:</strong> ${viaje.presupuesto}
+                </p>
+              </div>
 
-            <div className="pl-viaje-links">
-              <Link to={`/viajes/${viaje.id}`}>Ver detalle</Link>
-              <Link to={`/viajes/${viaje.id}/itinerario`} style={{ color: '#15803d' }}>
-                Modificar Itinerario
-              </Link>
-              <Link to={`/viajes/${viaje.id}/recomendaciones`} style={{ color: '#6d28d9' }}>
-                Ver recomendaciones
-              </Link>
-            </div>
-          </li>
-        ))}
+              <div className="pl-viaje-links">
+                <Link to={`/viajes/${viaje.id}`}>Ver detalle</Link>
+                <Link to={`/viajes/${viaje.id}/itinerario`}>Itinerario</Link>
+                <Link to={`/viajes/${viaje.id}/recomendaciones`} className="principal">
+                  Ver recomendaciones
+                </Link>
+              </div>
+            </li>
+          )
+        })}
       </ul>
     </section>
   )
