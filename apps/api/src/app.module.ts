@@ -4,6 +4,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ViajesModule } from './modules/viajes/viajes.module';
 import { CatalogoModule } from './modules/catalogo/catalogo.module';
+import { ItinerarioModule } from './modules/itinerario/itinerario.module';
 import { RecomendacionesModule } from './modules/recomendaciones/recomendaciones.module';
 
 // Cada funcionalidad registra su módulo acá con UNA línea en "imports".
@@ -14,7 +15,7 @@ import { RecomendacionesModule } from './modules/recomendaciones/recomendaciones
     PrismaModule,
     AuthModule, // F1
     ViajesModule, // F2
-    // ItinerarioModule,    // F2
+    ItinerarioModule, // F2
     CatalogoModule,
     RecomendacionesModule, // F3
     // GastosModule,        // F4
