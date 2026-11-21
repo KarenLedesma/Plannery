@@ -41,42 +41,61 @@ export const ItinerarioFormComponent: React.FC = () => {
   };
 
   return (
-    <section>
-      <h2>Añadir ítem al itinerario</h2>
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-      <form onSubmit={manejarSubmit}>
-        <div>
-          <label>Actividad ID *</label>
+    <form onSubmit={manejarSubmit} className="pl-form-card">
+      <h3 style={{ margin: 0, color: '#1e293b' }}>Añadir ítem al itinerario</h3>
+
+      {error && <div className="pl-error-box">Error: {error}</div>}
+
+      <div className="pl-field">
+        <label htmlFor="actividadId" className="pl-label">
+          Actividad ID *
+        </label>
+        <input
+          id="actividadId"
+          type="text"
+          className="pl-input"
+          value={actividadId}
+          onChange={(e) => setActividadId(e.target.value)}
+          required
+          autoComplete="off"
+          placeholder="ID de la actividad"
+        />
+      </div>
+
+      <div className="pl-field-row">
+        <div className="pl-field">
+          <label htmlFor="fecha" className="pl-label">
+            Fecha *
+          </label>
           <input
-            type="text"
-            value={actividadId}
-            onChange={(e) => setActividadId(e.target.value)}
-            required
-            placeholder="ID de la actividad"
-          />
-        </div>
-        <div>
-          <label>Fecha *</label>
-          <input
+            id="fecha"
             type="date"
+            className="pl-input"
             value={fecha}
             onChange={(e) => setFecha(e.target.value)}
             required
           />
         </div>
-        <div>
-          <label>Notas (opcional)</label>
+
+        <div className="pl-field">
+          <label htmlFor="notas" className="pl-label">
+            Notas (opcional)
+          </label>
           <input
+            id="notas"
             type="text"
+            className="pl-input"
             value={notas}
             onChange={(e) => setNotas(e.target.value)}
+            autoComplete="off"
             placeholder="Notas del ítem"
           />
         </div>
-        <button type="submit" disabled={loading} style={{ marginTop: '1rem' }}>
-          {loading ? 'Guardando...' : 'Añadir ítem'}
-        </button>
-      </form>
-    </section>
+      </div>
+
+      <button type="submit" className="pl-btn-submit" disabled={loading}>
+        {loading ? 'Guardando...' : 'Añadir ítem'}
+      </button>
+    </form>
   );
 };

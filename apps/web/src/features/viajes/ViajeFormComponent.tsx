@@ -20,8 +20,10 @@ export function ViajeFormComponent() {
   const [error, setError] = useState<string | null>(null);
   const [destinos, setDestinos] = useState<Destino[]>([]);
 
-  const manejarCambio = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDatos({ ...datos, [e.target.name]: e.target.value as any } as CrearViajeDto);
+  const manejarCambio = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setDatos({ ...datos, [e.target.name]: e.target.value });
   };
 
   useEffect(() => {
@@ -64,32 +66,44 @@ export function ViajeFormComponent() {
   };
 
   return (
-    <section>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <div className="pl-form-container">
+      <div className="pl-form-header">
         <h2>Nuevo Viaje</h2>
-        <Link to="/viajes">← Volver a Mis Viajes</Link>
+        <Link to="/viajes" className="pl-back-link">
+          ← Volver a Mis Viajes
+        </Link>
       </div>
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-      <form onSubmit={onSubmit}>
-        <div>
-          <label>Nombre *</label>
+
+      <form onSubmit={onSubmit} className="pl-form-card">
+        {error && <div className="pl-error-box">{error}</div>}
+
+        <div className="pl-field">
+          <label htmlFor="nombre" className="pl-label">
+            Nombre del viaje *
+          </label>
           <input
-            type="text"
+            id="nombre"
             name="nombre"
+            type="text"
+            className="pl-input"
+            placeholder="Ej: Escapada de fin de semana"
+            autoComplete="off"
             value={datos.nombre}
             onChange={manejarCambio}
-            minLength={2}
-            maxLength={80}
             required
           />
         </div>
-        <div>
-          <label>Destino *</label>
+
+        <div className="pl-field">
+          <label htmlFor="destinoId" className="pl-label">
+            Destino *
+          </label>
           <select
+            id="destinoId"
             name="destinoId"
+            className="pl-select"
             value={datos.destinoId}
-            onChange={(e) => setDatos({ ...datos, destinoId: e.target.value })}
-            style={{ width: '100%', marginBottom: '0.5rem' }}
+            onChange={manejarCambio}
             required
           >
             <option value="">-- Seleccionar destino --</option>
@@ -100,42 +114,59 @@ export function ViajeFormComponent() {
             ))}
           </select>
         </div>
-        <div>
-          <label>Fecha Inicio *</label>
-          <input
-            type="date"
-            name="fechaInicio"
-            value={datos.fechaInicio}
-            onChange={manejarCambio}
-            required
-          />
+
+        <div className="pl-field-row">
+          <div className="pl-field">
+            <label htmlFor="fechaInicio" className="pl-label">
+              Fecha Inicio *
+            </label>
+            <input
+              id="fechaInicio"
+              name="fechaInicio"
+              type="date"
+              className="pl-input"
+              value={datos.fechaInicio}
+              onChange={manejarCambio}
+              required
+            />
+          </div>
+
+          <div className="pl-field">
+            <label htmlFor="fechaFin" className="pl-label">
+              Fecha Fin *
+            </label>
+            <input
+              id="fechaFin"
+              name="fechaFin"
+              type="date"
+              className="pl-input"
+              value={datos.fechaFin}
+              onChange={manejarCambio}
+              required
+            />
+          </div>
         </div>
-        <div>
-          <label>Fecha Fin *</label>
+
+        <div className="pl-field">
+          <label htmlFor="presupuesto" className="pl-label">
+            Presupuesto estimado ($)
+          </label>
           <input
-            type="date"
-            name="fechaFin"
-            value={datos.fechaFin}
-            min={datos.fechaInicio || undefined}
-            onChange={manejarCambio}
-            required
-          />
-        </div>
-        <div>
-          <label>Presupuesto *</label>
-          <input
-            type="number"
+            id="presupuesto"
             name="presupuesto"
-            min={0}
-            value={String(datos.presupuesto)}
+            type="number"
+            min="0"
+            className="pl-input"
+            placeholder="Ej: 150000"
+            value={datos.presupuesto}
             onChange={manejarCambio}
-            required
           />
         </div>
-        <button type="submit" disabled={loading} style={{ marginTop: '1rem' }}>
-          {loading ? 'Guardando...' : 'Crear Viaje'}
+
+        <button type="submit" className="pl-btn-submit" disabled={loading}>
+          {loading ? 'Creando viaje...' : 'Crear Viaje'}
         </button>
       </form>
-    </section>
+    </div>
   );
 }
