@@ -7,20 +7,18 @@ import {
   Patch,
   Post,
   UseGuards,
-  BadRequestException,
-  NotFoundException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser, UsuarioActual } from '../../common/decorators/current-user.decorator';
 import { ItinerarioService } from './itinerario.service';
 import { CrearItinerarioDto, ActualizarItinerarioDto } from './itinerario.dto';
 
-@Controller('viajes')
+@Controller('viajes/:itinerarioId/itinerario')
 @UseGuards(JwtAuthGuard)
 export class ItinerarioController {
   constructor(private itinerario: ItinerarioService) {}
 
-  @Get(':itinerarioId')
+  @Get()
   async listar(
     @Param('itinerarioId') itinerarioId: string,
     @CurrentUser() usuario: UsuarioActual
@@ -28,7 +26,7 @@ export class ItinerarioController {
     return this.itinerario.listar(itinerarioId, usuario.id);
   }
 
-  @Post(':itinerarioId')
+  @Post()
   async crear(
     @Param('itinerarioId') itinerarioId: string,
     @Body() dto: CrearItinerarioDto,
@@ -37,7 +35,7 @@ export class ItinerarioController {
     return this.itinerario.crear(itinerarioId, dto, usuario.id);
   }
 
-  @Patch(':itinerarioId/:itemId')
+  @Patch(':itemId')
   async actualizar(
     @Param('itinerarioId') itinerarioId: string,
     @Param('itemId') itemId: string,
@@ -47,7 +45,7 @@ export class ItinerarioController {
     return this.itinerario.actualizar(dto, itemId, usuario.id, itinerarioId);
   }
 
-  @Delete(':itinerarioId/:itemId')
+  @Delete(':itemId')
   async eliminar(
     @Param('itinerarioId') itinerarioId: string,
     @Param('itemId') itemId: string,
