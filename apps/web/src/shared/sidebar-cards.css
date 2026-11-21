@@ -2,8 +2,12 @@
 .pl-sidebar {
   position: fixed;
   top: 0;
+  bottom: 0;
   left: 0;
   width: 68px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  scrollbar-width: none;
   height: 100vh;
   background-color: #f2ece1;
   border-right: 1px solid #e4ddd0;
@@ -85,7 +89,8 @@
 .pl-main-area {
   margin-left: 68px;
   min-height: 100vh;
-  padding: 2rem 2.5rem;
+  padding-block: 2.5rem;
+  padding-inline: max(4rem, calc((100vw - 68px - 1100px) / 2));
 }
 
 /* Cards de viajes en grilla con la misma paleta clara */
