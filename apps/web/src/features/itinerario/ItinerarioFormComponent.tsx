@@ -27,7 +27,7 @@ export const ItinerarioFormComponent: React.FC = () => {
         fecha,
       };
       if (notas.trim()) {
-        dto.notas = notas;
+        dto.nota = notas;
       }
       await crearItinerario(itinerarioId, dto);
       setActividadId('');
