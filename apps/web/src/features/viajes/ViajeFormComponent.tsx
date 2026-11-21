@@ -1,82 +1,74 @@
-import React, { useState, useEffect } from 'react'
-import { crearViaje, type CrearViajeDto } from './viajes.service'
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { crearViaje, type CrearViajeDto } from './viajes.service';
 
 type Destino = {
-  id: string
-  nombre: string
-}
+  id: string;
+  nombre: string;
+};
 
 export function ViajeFormComponent() {
+  const navigate = useNavigate();
   const [datos, setDatos] = useState<CrearViajeDto>({
     nombre: '',
     destinoId: '',
     fechaInicio: '',
     fechaFin: '',
     presupuesto: 0,
-  })
-  const [exito, setExito] = useState<boolean | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [destinos, setDestinos] = useState<Destino[]>([])
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [destinos, setDestinos] = useState<Destino[]>([]);
 
   const manejarCambio = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDatos({ ...datos, [e.target.name]: e.target.value as any } as CrearViajeDto)
-  }
-
-  const cargarDestinos = async () => {
-    try {
-      const respuesta = await fetch('/api/destinos', {
-        credentials: 'include',
-      })
-      const destinos = await respuesta.json()
-      if (!Array.isArray(destinos)) {
-        console.warn('Expected destinations array but got:', destinos)
-        setDestinos([])
-        return
-      }
-      setDestinos(destinos)
-    } catch (e: any) {
-      setError(e.message)
-    }
-  }
+    setDatos({ ...datos, [e.target.name]: e.target.value as any } as CrearViajeDto);
+  };
 
   useEffect(() => {
-    cargarDestinos()
-  }, [])
+    async function cargarDestinos() {
+      try {
+        const respuesta = await fetch('/api/destinos', {
+          credentials: 'include',
+        });
+        if (!respuesta.ok) {
+          throw new Error('No se pudieron cargar los destinos');
+        }
+        const data = await respuesta.json();
+        setDestinos(Array.isArray(data) ? data : []);
+      } catch (e: any) {
+        setError(e.message);
+      }
+    }
+    cargarDestinos();
+  }, []);
 
   const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
     if (!datos.destinoId) {
-      setError('Por favor, selecciona un destino o ingresa un destinoId válido')
-      setLoading(false)
-      return
+      setError('Por favor, selecciona un destino válido');
+      setLoading(false);
+      return;
     }
 
     try {
-      // El input entrega texto: el backend espera el presupuesto como número
-      await crearViaje({ ...datos, presupuesto: Number(datos.presupuesto) })
-      setExito(true)
-      setDatos({
-        nombre: '',
-        destinoId: '',
-        fechaInicio: '',
-        fechaFin: '',
-        presupuesto: 0,
-      })
+      await crearViaje({ ...datos, presupuesto: Number(datos.presupuesto) });
+      navigate('/viajes');
     } catch (e: any) {
-      setError(e.message)
+      setError(e.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <section>
-      <h2>Nuevo Viaje</h2>
-      {exito && <p style={{ color: 'green' }}>Viaje creado exitosamente!</p>}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2>Nuevo Viaje</h2>
+        <Link to="/viajes">← Volver a Mis Viajes</Link>
+      </div>
       {error && <p style={{ color: 'red' }}>Error: {error}</p>}
       <form onSubmit={onSubmit}>
         <div>
@@ -86,14 +78,17 @@ export function ViajeFormComponent() {
             name="nombre"
             value={datos.nombre}
             onChange={manejarCambio}
+            minLength={2}
+            maxLength={80}
             required
           />
         </div>
         <div>
           <label>Destino *</label>
           <select
+            name="destinoId"
             value={datos.destinoId}
-            onChange={(e) => setDatos({ ...datos, destinoId: e.target.value } as any)}
+            onChange={(e) => setDatos({ ...datos, destinoId: e.target.value })}
             style={{ width: '100%', marginBottom: '0.5rem' }}
             required
           >
@@ -121,6 +116,7 @@ export function ViajeFormComponent() {
             type="date"
             name="fechaFin"
             value={datos.fechaFin}
+            min={datos.fechaInicio || undefined}
             onChange={manejarCambio}
             required
           />
@@ -130,6 +126,7 @@ export function ViajeFormComponent() {
           <input
             type="number"
             name="presupuesto"
+            min={0}
             value={String(datos.presupuesto)}
             onChange={manejarCambio}
             required
@@ -140,5 +137,5 @@ export function ViajeFormComponent() {
         </button>
       </form>
     </section>
-  )
+  );
 }
