@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { crearItinerario } from './itinerario.service';
 import { ActividadSelect } from '../catalogo/ActividadSelect';
 
-export const ItinerarioFormComponent: React.FC = () => {
+export const ItinerarioFormComponent: React.FC<{ onAgregado?: () => void }> = ({ onAgregado }) => {
   const { id: itinerarioId } = useParams<{ id: string }>();
   const [actividadId, setActividadId] = useState<string>('');
   const [fecha, setFecha] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -31,6 +31,8 @@ export const ItinerarioFormComponent: React.FC = () => {
         dto.nota = notas;
       }
       await crearItinerario(itinerarioId, dto);
+      onAgregado?.();
+      setNotas('');
       setActividadId('');
       setFecha(new Date().toISOString().split('T')[0]);
       setNotas('');

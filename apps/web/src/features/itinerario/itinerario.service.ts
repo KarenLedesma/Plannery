@@ -1,6 +1,7 @@
 export interface ItinerarioDia {
   id: string;
   actividadId: string;
+  actividad?: { id: string; nombre: string; tipo: string };
   fecha: string;
   nota?: string;
 }
