@@ -2,7 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { listarItinerario, type ItinerarioDia } from './itinerario.service';
 
-export const ItinerarioListComponent: React.FC = () => {
+// 2026-11-23T00:00:00.000Z -> 23/11/2026
+function formatearFecha(fecha: string) {
+  const [anio, mes, dia] = fecha.slice(0, 10).split('-');
+  return `${dia}/${mes}/${anio}`;
+}
+
+interface Props {
+  // Cambia cada vez que se agrega un ítem: obliga a pedir la lista de nuevo
+  version?: number;
+}
+
+export const ItinerarioListComponent: React.FC<Props> = ({ version = 0 }) => {
   const { id: itinerarioId } = useParams<{ id: string }>();
   const [itinerarioItems, setItinerarioItems] = useState<ItinerarioDia[]>([]);
   const [loading, setLoading] = useState(true);
@@ -13,6 +24,7 @@ export const ItinerarioListComponent: React.FC = () => {
       try {
         const data = await listarItinerario(itinerarioId!);
         setItinerarioItems(data);
+        setError(null);
       } catch (e: any) {
         setError(e.message);
       } finally {
@@ -20,7 +32,7 @@ export const ItinerarioListComponent: React.FC = () => {
       }
     }
     if (itinerarioId) fetchItinerario();
-  }, [itinerarioId]);
+  }, [itinerarioId, version]);
 
   if (loading) return <p>Cargando...</p>;
   if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
@@ -32,9 +44,9 @@ export const ItinerarioListComponent: React.FC = () => {
       <ul>
         {itinerarioItems.map((item) => (
           <li key={item.id} style={{ marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid #eee' }}>
-            <h3>{item.actividadId}</h3>
-            <p><strong>Fecha:</strong> {item.fecha}</p>
-            <p><strong>Notas:</strong> {item.notas || 'Ninguna'}</p>
+            <h3>{item.actividad?.nombre ?? item.actividadId}</h3>
+            <p><strong>Fecha:</strong> {formatearFecha(item.fecha)}</p>
+            <p><strong>Notas:</strong> {item.nota || 'Ninguna'}</p>
           </li>
         ))}
       </ul>
