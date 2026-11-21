@@ -1,4 +1,4 @@
-.catalogo-admin { max-width: 960px; }
+.catalogo-admin { max-width: 960px; margin: 0 auto; padding: 1rem 1.5rem 2rem; }
 .catalogo-ayuda { color: #4a5568; margin-bottom: 1rem; }
 
 .catalogo-filtros { display: flex; gap: 1rem; margin-bottom: 1rem; }
@@ -45,3 +45,4 @@
 
 .catalogo-form { scroll-margin-top: 1rem; }
 .catalogo-form-grilla .catalogo-form-check input { width: auto; padding: 0; }
+.catalogo-admin h1 { font-size: 2rem; margin-bottom: 0.25rem; }
