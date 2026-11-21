@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { listarItinerario, type ItinerarioDia } from './itinerario.service';
 
 export const ItinerarioListComponent: React.FC = () => {
-  const { itinerarioId } = window.location.pathname.match(/\/viajes\/([^/]+)\/itinerario/) || [];
+  const { id: itinerarioId } = useParams<{ id: string }>();
   const [itinerarioItems, setItinerarioItems] = useState<ItinerarioDia[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +19,7 @@ export const ItinerarioListComponent: React.FC = () => {
         setLoading(false);
       }
     }
-    fetchItinerario();
+    if (itinerarioId) fetchItinerario();
   }, [itinerarioId]);
 
   if (loading) return <p>Cargando...</p>;
