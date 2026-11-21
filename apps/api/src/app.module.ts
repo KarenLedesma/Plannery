@@ -1,3 +1,4 @@
+import { GastosModule } from './modules/gastos/gastos.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
@@ -16,8 +17,8 @@ import { RecomendacionesModule } from './modules/recomendaciones/recomendaciones
     ViajesModule, // F2
     // ItinerarioModule,    // F2
     CatalogoModule,
+    GastosModule,
     RecomendacionesModule, // F3
-    // GastosModule,        // F4
     // ResumenModule,       // F5
   ],
 })
