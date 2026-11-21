@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { crearItinerario } from './itinerario.service';
+import { ActividadSelect } from '../catalogo/ActividadSelect';
 
 export const ItinerarioFormComponent: React.FC = () => {
   const { id: itinerarioId } = useParams<{ id: string }>();
@@ -48,17 +49,13 @@ export const ItinerarioFormComponent: React.FC = () => {
 
       <div className="pl-field">
         <label htmlFor="actividadId" className="pl-label">
-          Actividad ID *
+          Actividad *
         </label>
-        <input
+        <ActividadSelect
           id="actividadId"
-          type="text"
           className="pl-input"
           value={actividadId}
-          onChange={(e) => setActividadId(e.target.value)}
-          required
-          autoComplete="off"
-          placeholder="ID de la actividad"
+          onChange={setActividadId}
         />
       </div>
 
