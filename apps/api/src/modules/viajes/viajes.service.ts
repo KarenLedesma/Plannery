@@ -26,6 +26,13 @@ export class ViajesService {
       include: { destino: { select: DESTINO_PUBLICO } },
     });
   }
+  
+  listarDestinos() {
+    return this.prisma.destino.findMany({
+      select: DESTINO_PUBLICO,
+      orderBy: { nombre: 'asc' },
+    });
+  }
 
   async obtener(id: string, usuarioId: string) {
     const viaje = await this.prisma.viaje.findFirst({

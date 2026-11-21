@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { crearItinerario, type ItinerarioDia } from './itinerario.service';
+import { useParams } from 'react-router-dom';
+import { crearItinerario } from './itinerario.service';
 
 export const ItinerarioFormComponent: React.FC = () => {
-  const { itinerarioId } = window.location.pathname.match(/\/viajes\/([^/]+)\/itinerario/) || [];
+  const { id: itinerarioId } = useParams<{ id: string }>();
   const [actividadId, setActividadId] = useState<string>('');
   const [fecha, setFecha] = useState<string>(new Date().toISOString().split('T')[0]);
   const [notas, setNotas] = useState<string>('');
@@ -10,12 +11,13 @@ export const ItinerarioFormComponent: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Cargar actividads disponibles (podría traerlas de una API o del catálogo)
+    // Cargar actividades disponibles (podría traerlas de una API o del catálogo)
     // Por ahora dejamos el formulario vacío para ingreso manual
   }, [itinerarioId]);
 
   const manejarSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!itinerarioId) return;
     setLoading(true);
     setError(null);
 
@@ -27,13 +29,13 @@ export const ItinerarioFormComponent: React.FC = () => {
       if (notas.trim()) {
         dto.notas = notas;
       }
-      await crearItinerario(itinerarioId!, dto);
+      await crearItinerario(itinerarioId, dto);
       setActividadId('');
       setFecha(new Date().toISOString().split('T')[0]);
       setNotas('');
-      setLoading(false);
     } catch (e: any) {
       setError(e.message);
+    } finally {
       setLoading(false);
     }
   };

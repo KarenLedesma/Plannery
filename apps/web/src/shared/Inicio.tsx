@@ -86,8 +86,8 @@ export function Inicio() {
         {viajesFiltrados.map((viaje) => (
           <li key={viaje.id} style={{ marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid #eee' }}>
             <h3>{viaje.nombre}</h3>
-            <p><strong>Destino:</strong> {viaje.destinoId}</p>
-            <p><strong>Fechas:</strong> {viaje.fechaInicio} - {viaje.fechaFin}</p>
+            <p><strong>Destino:</strong> {viaje.destino?.nombre ?? viaje.destinoId}</p>
+            <p><strong>Fechas:</strong> {viaje.fechaInicio?.slice(0, 10)} - {viaje.fechaFin?.slice(0, 10)}</p>
             <p><strong>Presupuesto:</strong> {viaje.presupuesto}</p>
             <Link to={`/viajes/${viaje.id}`} style={{ color: 'blue', textDecoration: 'underline' }}>Ver detalle</Link>
             <Link to={`/viajes/${viaje.id}/itinerario`} style={{ marginLeft: '1rem', color: 'green', textDecoration: 'none' }}>Modificar Itinerario</Link>

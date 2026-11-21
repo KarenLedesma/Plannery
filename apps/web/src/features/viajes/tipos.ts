@@ -2,10 +2,16 @@ export interface Viaje {
   id: string;
   nombre: string;
   destinoId: string;
+  destino?: {
+    id: string;
+    nombre: string;
+    slug?: string;
+  };
   fechaInicio: string;
   fechaFin: string;
   presupuesto: number;
-  creadoEn: string;
+  moneda?: string;
+  estado?: string;
 }
 
 export interface CrearViajeDto {

@@ -6,10 +6,9 @@ import { Layout } from './shared/Layout'
 import { Inicio } from './shared/Inicio'
 import { RecomendacionesPage } from './features/recomendaciones/RecomendacionesPage'
 import { CatalogoAdminPage } from './features/catalogo/CatalogoAdminPage'
+import { ViajeListComponent, ViajeFormComponent, ViajeDetallePage } from './features/viajes'
+import { ItinerarioPage } from './features/itinerario'
 
-// Cada funcionalidad agrega sus rutas dentro del bloque que le corresponde:
-// - Bloque 1: cualquier persona con sesión (F2 viajes, F4 gastos, F5 resumen).
-// - Bloque 2: solo ADMIN (F3 catálogo).
 export default function App() {
   return (
     <Routes>
@@ -19,7 +18,10 @@ export default function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<Layout />}>
           <Route index element={<Inicio />} />
-          {/* F2, F4 y F5 agregan sus rutas acá */}
+          <Route path="viajes" element={<ViajeListComponent />} />
+          <Route path="viajes/nuevo" element={<ViajeFormComponent />} />
+          <Route path="viajes/:id" element={<ViajeDetallePage />} />
+          <Route path="viajes/:id/itinerario" element={<ItinerarioPage />} />
           <Route path="viajes/:id/recomendaciones" element={<RecomendacionesPage />} />
         </Route>
       </Route>

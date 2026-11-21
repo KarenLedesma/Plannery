@@ -1,4 +1,5 @@
 export { ViajeListComponent } from './ViajeListComponent'
 export { ViajeFormComponent } from './ViajeFormComponent'
+export { ViajeDetallePage } from './ViajeDetallePage'
 export { listarViajes, crearViaje, crearItinerario } from './viajes.service'
 export type { Viaje, CrearViajeDto, ItinerarioDia, CrearItinerarioDto } from './tipos'

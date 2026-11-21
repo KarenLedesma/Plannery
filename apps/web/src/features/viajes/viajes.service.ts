@@ -22,7 +22,11 @@ export const crearViaje = async (dto: CrearViajeDto): Promise<Viaje> => {
     body: JSON.stringify(dto),
     credentials: 'include',
   });
-  if (!res.ok) throw new Error('Error al crear viaje');
+  if (!res.ok) {
+    const err = await res.json().catch(() => null);
+    const msg = Array.isArray(err?.message) ? err.message.join(', ') : err?.message;
+    throw new Error(msg || 'Error al crear viaje');
+  }
   return res.json();
 };
 
