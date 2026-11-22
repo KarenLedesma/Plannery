@@ -66,10 +66,13 @@ export function Inicio() {
   if (error) return <p style={{ color: 'red' }}>Error: {error}</p>
 
   return (
-    <section>
-      <h1 className="pl-inicio-titulo">Hola, {usuario?.nombre}</h1>
+    <section className="pl-inicio">
+      <img className="pl-deco pl-ilustracion" src="/img/ilustracion-ba.jpg" alt="" aria-hidden="true" />
+
+      <h1 className="pl-inicio-titulo">¡Hola, {usuario?.nombre}!</h1>
+      <p className="pl-inicio-tagline">Preparate para explorar el encanto porteño.</p>
       <p className="pl-inicio-sub">
-        {viajes.length} {viajes.length === 1 ? 'viaje' : 'viajes'} en total
+        🗺️ {viajes.length} {viajes.length === 1 ? 'viaje' : 'viajes'} en total
       </p>
 
       <div className="pl-toolbar">
@@ -100,6 +103,10 @@ export function Inicio() {
           return (
             <li key={viaje.id} className="pl-viaje-card">
               <div>
+                <div className="pl-viaje-fotos">
+                  <img src="/img/foto-obelisco.jpg" alt="Obelisco de Buenos Aires" />
+                  <img src="/img/foto-cafe.jpg" alt="Café porteño" />
+                </div>
                 <div className="pl-viaje-head">
                   <h3 className="pl-viaje-title">{viaje.nombre}</h3>
                   <span className={`pl-badge ${estado}`}>{ETIQUETAS[estado]}</span>
@@ -108,10 +115,10 @@ export function Inicio() {
                   <strong>Destino:</strong> {viaje.destino?.nombre ?? viaje.destinoId}
                 </p>
                 <p className="pl-viaje-meta">
-                  <strong>Fechas:</strong> {viaje.fechaInicio?.slice(0, 10)} - {viaje.fechaFin?.slice(0, 10)}
+                  <strong>📅 Fechas:</strong> {viaje.fechaInicio?.slice(0, 10)} - {viaje.fechaFin?.slice(0, 10)}
                 </p>
                 <p className="pl-viaje-meta">
-                  <strong>Presupuesto:</strong> ${viaje.presupuesto}
+                  <strong>💵 Presupuesto:</strong> ${viaje.presupuesto}
                 </p>
               </div>
 
@@ -119,7 +126,7 @@ export function Inicio() {
                 <Link to={`/viajes/${viaje.id}`}>Ver detalle</Link>
                 <Link to={`/viajes/${viaje.id}/itinerario`}>Itinerario</Link>
                 <Link to={`/viajes/${viaje.id}/recomendaciones`} className="principal">
-                  Ver recomendaciones
+                  ✨ Ver recomendaciones
                 </Link>
               </div>
             </li>
