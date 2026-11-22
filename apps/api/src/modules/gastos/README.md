@@ -13,6 +13,7 @@ Todos requieren sesión (401 sin cookie válida) y cuelgan de un viaje propio.
 | `POST /viajes/:viajeId/gastos` | Crea un gasto |
 | `PATCH /viajes/:viajeId/gastos/:gastoId` | Edita un gasto (por ejemplo, para cargar el monto real) |
 | `DELETE /viajes/:viajeId/gastos/:gastoId` | Borra un gasto |
+| `GET /viajes/:viajeId/gastos/comparacion` | Compara lo estimado con lo real por categoría y por fase, y contra el presupuesto |
 
 **Valores permitidos:**
 - `categoria`: `TRANSPORTE`, `ALOJAMIENTO`, `COMIDA`, `ACTIVIDADES`, `OTROS`
@@ -28,6 +29,19 @@ Todos requieren sesión (401 sin cookie válida) y cuelgan de un viaje propio.
 }
 ```
 `montoReal`, `fecha` (AAAA-MM-DD) y `nota` son opcionales. `montoReal` queda vacío hasta que el gasto se hace efectivo.
+
+**Respuesta de `comparacion`:**
+```json
+{
+  "moneda": "ARS",
+  "presupuesto": 900000,
+  "total": { "estimado": 320000, "real": 150000, "diferencia": -170000 },
+  "disponible": 750000,
+  "porCategoria": [ { "categoria": "TRANSPORTE", "estimado": 180000, "real": 172000, "diferencia": -8000 } ],
+  "porFase": [ { "fase": "ANTES", "estimado": 320000, "real": 150000, "diferencia": -170000 } ]
+}
+```
+`diferencia = real - estimado`: positiva si se gastó más de lo estimado. `real` suma solo los gastos que ya tienen monto real. Siempre vienen todas las categorías y fases, aunque estén en cero.
 
 ## Reglas de acceso
 - Antes de cualquier operación se verifica que el viaje sea del usuario. Un viaje ajeno responde **404**, igual que si no existiera.
