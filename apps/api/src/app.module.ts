@@ -6,6 +6,7 @@ import { ViajesModule } from './modules/viajes/viajes.module';
 import { CatalogoModule } from './modules/catalogo/catalogo.module';
 import { ItinerarioModule } from './modules/itinerario/itinerario.module';
 import { RecomendacionesModule } from './modules/recomendaciones/recomendaciones.module';
+import { ResumenModule } from './modules/resumen/resumen.module';
 
 // Cada funcionalidad registra su módulo acá con UNA línea en "imports".
 // Es el único archivo que tocan todas, por eso los cambios son chicos y fáciles de fusionar.
@@ -19,7 +20,7 @@ import { RecomendacionesModule } from './modules/recomendaciones/recomendaciones
     CatalogoModule,
     RecomendacionesModule, // F3
     // GastosModule,        // F4
-    // ResumenModule,       // F5
+    ResumenModule,       // F5
   ],
 })
 export class AppModule {}

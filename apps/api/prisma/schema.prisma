@@ -36,14 +36,15 @@ enum FaseGasto {
 }
 
 model Usuario {
-  id           String   @id @default(uuid()) @db.Uuid
-  nombre       String
-  email        String   @unique
-  passwordHash String
-  rol          Rol      @default(VIAJERO)
-  creadoEn     DateTime @default(now())
-  actualizadoEn DateTime @updatedAt
-  viajes       Viaje[]
+  id            String           @id @default(uuid()) @db.Uuid
+  nombre        String
+  email         String           @unique
+  passwordHash  String
+  rol           Rol              @default(VIAJERO)
+  creadoEn      DateTime         @default(now())
+  actualizadoEn DateTime         @updatedAt
+  viajes        Viaje[]
+  iaConfig      UsuarioIaConfig?
 
   @@map("usuarios")
 }
@@ -144,4 +145,15 @@ model Gasto {
   @@index([viajeId, fase])
   @@index([viajeId, categoria])
   @@map("gastos")
+}
+model UsuarioIaConfig {
+  id              String   @id @default(uuid())
+  usuarioId       String   @unique
+  usuario         Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  proveedor       String   @default("gemini")
+  apiKeyEncrypted String
+  creadoEn        DateTime @default(now())
+  actualizadoEn   DateTime @updatedAt
+
+  @@map("usuarios_ia_config")
 }
