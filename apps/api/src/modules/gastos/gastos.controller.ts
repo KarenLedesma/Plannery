@@ -19,6 +19,12 @@ export class GastosController {
     return this.gastos.listar(viajeId, usuario.id, filtros);
   }
 
+  // Debe ir antes de las rutas con :gastoId para que "comparacion" no se tome como un id
+  @Get('comparacion')
+  comparar(@Param('viajeId', ParseUUIDPipe) viajeId: string, @CurrentUser() usuario: UsuarioActual) {
+    return this.gastos.comparar(viajeId, usuario.id);
+  }
+
   @Post()
   crear(
     @Param('viajeId', ParseUUIDPipe) viajeId: string,
