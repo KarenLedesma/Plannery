@@ -1,8 +1,17 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsDateString, IsInt, IsOptional, IsString, IsUUID, MaxLength, Min } from 'class-validator';
+import {
+  IsDateString,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+  Min,
+} from 'class-validator';
 
 export class CrearItinerarioDto {
-  @IsUUID()
+  @IsString()
+  @IsNotEmpty()
   actividadId!: string;
 
   @IsDateString()
