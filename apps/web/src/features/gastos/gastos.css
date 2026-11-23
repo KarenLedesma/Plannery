@@ -1,0 +1,255 @@
+/* Gastos del viaje (F4-03 y F4-04). Reutiliza las clases pl-* de shared/sidebar-cards.css */
+.gastos .gastos-acciones {
+  margin: 1rem 0 1.5rem;
+}
+
+.gastos .gastos-form {
+  max-width: 720px;
+  margin-bottom: 1.5rem;
+}
+
+.gastos .gastos-form h3 {
+  margin: 0;
+  color: #1e293b;
+}
+
+.gastos-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+}
+
+.gastos-filtros .pl-select {
+  width: auto;
+  min-width: 200px;
+}
+
+.gastos-vacio {
+  padding: 1.25rem;
+  border: 1px dashed #d6cfc2;
+  border-radius: 14px;
+  background: #fff;
+  color: #475569;
+}
+
+.gastos-totales {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #475569;
+}
+
+.gastos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gasto-card {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid #e4ddd0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(30, 41, 59, 0.05);
+}
+
+.gasto-card p {
+  margin: 0;
+}
+
+.gasto-titulo {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.gasto-meta,
+.gasto-nota {
+  margin-top: 0.2rem !important;
+  font-size: 0.88rem;
+  color: #64748b;
+}
+
+.gasto-montos {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+  font-size: 0.92rem;
+}
+
+.gasto-estimado {
+  color: #64748b;
+}
+
+.gasto-real {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.gasto-pendiente {
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: #fdeee3;
+  color: #c8431b;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.gasto-input-chico {
+  width: 130px;
+  padding: 0.4rem 0.6rem;
+}
+
+.gasto-link {
+  border: none;
+  background: none;
+  color: #164e78;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.gasto-link:hover {
+  text-decoration: underline;
+}
+
+.gasto-borrar {
+  border: none;
+  background: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.gasto-borrar:hover {
+  opacity: 1;
+}
+
+@media (max-width: 720px) {
+  .gasto-card {
+    grid-template-columns: 1fr;
+  }
+  .gasto-montos {
+    align-items: flex-start;
+  }
+}
+
+/* Comparación estimado vs. real */
+.cmp-resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  max-width: 900px;
+  margin: 1.5rem 0 1rem;
+}
+
+.cmp-total {
+  margin: 0 0 1.5rem;
+  font-weight: 600;
+}
+
+.cmp-subtitulo {
+  margin: 1.75rem 0 0.75rem;
+  color: #1e293b;
+}
+
+.cmp-leyenda {
+  display: flex;
+  gap: 1.25rem;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.cmp-punto {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 6px;
+  border-radius: 50%;
+}
+
+.cmp-grupo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
+  gap: 1rem;
+}
+
+.cmp-fila {
+  padding: 1rem 1.25rem;
+  border: 1px solid #e4ddd0;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.cmp-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+
+.cmp-barras {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cmp-pista {
+  height: 14px;
+  border-radius: 8px;
+  background: #f2ece1;
+  overflow: hidden;
+}
+
+.cmp-barra {
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.6s ease;
+}
+
+
+.cmp-est {
+  background: #1b6fa8;
+}
+
+.cmp-rea {
+  background: #f6893b;
+}
+
+.cmp-cifras {
+  margin: 0.6rem 0 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.cmp-nota {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.dif-mas {
+  color: #c8431b;
+  font-weight: 600;
+}
+
+.dif-menos {
+  color: #2f7a4a;
+  font-weight: 600;
+}
+
+.dif-cero {
+  color: #64748b;
+  font-weight: 600;
+}
