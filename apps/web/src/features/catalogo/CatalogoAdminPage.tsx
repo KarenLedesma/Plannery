@@ -1,19 +1,36 @@
 import { useEffect, useState } from 'react'
 import { mensajeDeError } from '../../shared/api'
-import { eliminarActividad, listarActividades } from './catalogo.api'
-import type { Actividad, FiltrosCatalogo } from './catalogo.api'
+import {
+  actualizarActividad,
+  crearActividad,
+  eliminarActividad,
+  listarActividades,
+  listarDestinos,
+} from './catalogo.api'
+import type { Actividad, DatosActividad, Destino, FiltrosCatalogo } from './catalogo.api'
+import { ActividadForm } from './ActividadForm'
 import './catalogo.css'
 
 const ETIQUETA_TIPO = { INTERIOR: 'Interior', EXTERIOR: 'Exterior', MIXTA: 'Mixta' }
 
 export function CatalogoAdminPage() {
   const [actividades, setActividades] = useState<Actividad[]>([])
+  const [destinos, setDestinos] = useState<Destino[]>([])
   const [filtros, setFiltros] = useState<FiltrosCatalogo>({ tipo: '', activa: '' })
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [aviso, setAviso] = useState<string | null>(null)
   // Subir este número vuelve a pedir la lista (por ejemplo, después de eliminar)
   const [version, setVersion] = useState(0)
+  const [formulario, setFormulario] = useState<Actividad | 'nueva' | null>(null)
+  const [guardando, setGuardando] = useState(false)
+  const [errorForm, setErrorForm] = useState<string | null>(null)
+
+  useEffect(() => {
+    listarDestinos()
+      .then(setDestinos)
+      .catch((e) => setError(mensajeDeError(e)))
+  }, [])
 
   useEffect(() => {
     let vigente = true
@@ -35,6 +52,34 @@ export function CatalogoAdminPage() {
     setCargando(true)
     setAviso(null)
     setFiltros({ ...filtros, ...cambio })
+  }
+
+  function abrirFormulario(valor: Actividad | 'nueva') {
+    setAviso(null)
+    setErrorForm(null)
+    setFormulario(valor)
+  }
+
+  async function guardar(datos: DatosActividad) {
+    const editando = formulario && formulario !== 'nueva' ? formulario : null
+    setGuardando(true)
+    setErrorForm(null)
+    try {
+      if (editando) {
+        await actualizarActividad(editando.id, datos)
+        setAviso(`"${datos.nombre}" se actualizó.`)
+      } else {
+        await crearActividad(datos)
+        setAviso(`"${datos.nombre}" se creó.`)
+      }
+      setFormulario(null)
+      setCargando(true)
+      setVersion((v) => v + 1)
+    } catch (e) {
+      setErrorForm(mensajeDeError(e))
+    } finally {
+      setGuardando(false)
+    }
   }
 
   async function eliminar(actividad: Actividad) {
@@ -62,25 +107,49 @@ export function CatalogoAdminPage() {
       <h1>Catálogo de actividades</h1>
       <p className="catalogo-ayuda">Acá se administran las actividades que se recomiendan en los viajes.</p>
 
-      <div className="catalogo-filtros">
-        <label>
-          Tipo
-          <select value={filtros.tipo} onChange={(e) => cambiarFiltros({ tipo: e.target.value as FiltrosCatalogo['tipo'] })}>
-            <option value="">Todos</option>
-            <option value="INTERIOR">Interior</option>
-            <option value="EXTERIOR">Exterior</option>
-            <option value="MIXTA">Mixta</option>
-          </select>
-        </label>
-        <label>
-          Estado
-          <select value={filtros.activa} onChange={(e) => cambiarFiltros({ activa: e.target.value as FiltrosCatalogo['activa'] })}>
-            <option value="">Todas</option>
-            <option value="true">Activas</option>
-            <option value="false">Archivadas</option>
-          </select>
-        </label>
+      <div className="catalogo-barra">
+        <div className="catalogo-filtros">
+          <label>
+            Tipo
+            <select value={filtros.tipo} onChange={(e) => cambiarFiltros({ tipo: e.target.value as FiltrosCatalogo['tipo'] })}>
+              <option value="">Todos</option>
+              <option value="INTERIOR">Interior</option>
+              <option value="EXTERIOR">Exterior</option>
+              <option value="MIXTA">Mixta</option>
+            </select>
+          </label>
+          <label>
+            Estado
+            <select value={filtros.activa} onChange={(e) => cambiarFiltros({ activa: e.target.value as FiltrosCatalogo['activa'] })}>
+              <option value="">Todas</option>
+              <option value="true">Activas</option>
+              <option value="false">Archivadas</option>
+            </select>
+          </label>
+        </div>
+        {formulario === null && (
+          <button
+            type="button"
+            className="catalogo-guardar"
+            disabled={destinos.length === 0}
+            onClick={() => abrirFormulario('nueva')}
+          >
+            Nueva actividad
+          </button>
+        )}
       </div>
+
+      {formulario !== null && (
+        <ActividadForm
+          key={formulario === 'nueva' ? 'nueva' : formulario.id}
+          destinos={destinos}
+          inicial={formulario === 'nueva' ? null : formulario}
+          guardando={guardando}
+          error={errorForm}
+          onGuardar={guardar}
+          onCancelar={() => setFormulario(null)}
+        />
+      )}
 
       {aviso && <p className="catalogo-aviso" role="status">{aviso}</p>}
       {error && <p className="catalogo-error" role="alert">{error}</p>}
@@ -112,11 +181,16 @@ export function CatalogoAdminPage() {
                     </span>
                   </td>
                   <td>
-                    {a.activa && (
-                      <button type="button" className="catalogo-borrar" onClick={() => eliminar(a)}>
-                        Eliminar
+                    <div className="catalogo-acciones">
+                      <button type="button" className="catalogo-editar" onClick={() => abrirFormulario(a)}>
+                        Editar
                       </button>
-                    )}
+                      {a.activa && (
+                        <button type="button" className="catalogo-borrar" onClick={() => eliminar(a)}>
+                          Eliminar
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

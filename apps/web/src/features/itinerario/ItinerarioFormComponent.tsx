@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { crearItinerario } from './itinerario.service';
+import { ActividadSelect } from '../catalogo/ActividadSelect';
 
-export const ItinerarioFormComponent: React.FC = () => {
+export const ItinerarioFormComponent: React.FC<{ onAgregado?: () => void }> = ({ onAgregado }) => {
   const { id: itinerarioId } = useParams<{ id: string }>();
   const [actividadId, setActividadId] = useState<string>('');
   const [fecha, setFecha] = useState<string>(new Date().toISOString().split('T')[0]);
@@ -27,9 +28,11 @@ export const ItinerarioFormComponent: React.FC = () => {
         fecha,
       };
       if (notas.trim()) {
-        dto.notas = notas;
+        dto.nota = notas;
       }
       await crearItinerario(itinerarioId, dto);
+      onAgregado?.();
+      setNotas('');
       setActividadId('');
       setFecha(new Date().toISOString().split('T')[0]);
       setNotas('');
@@ -48,17 +51,13 @@ export const ItinerarioFormComponent: React.FC = () => {
 
       <div className="pl-field">
         <label htmlFor="actividadId" className="pl-label">
-          Actividad ID *
+          Actividad *
         </label>
-        <input
+        <ActividadSelect
           id="actividadId"
-          type="text"
           className="pl-input"
           value={actividadId}
-          onChange={(e) => setActividadId(e.target.value)}
-          required
-          autoComplete="off"
-          placeholder="ID de la actividad"
+          onChange={setActividadId}
         />
       </div>
 
