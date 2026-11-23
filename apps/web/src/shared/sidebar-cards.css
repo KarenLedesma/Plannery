@@ -591,3 +591,10 @@
 .pl-btn-recs:hover {
   background: linear-gradient(90deg, #a93815, #e8912f);
 }
+
+/* Inicio: la fila de filtros y botón no pasa por debajo de la ilustración */
+@media (min-width: 1101px) {
+  .pl-inicio:has(.pl-ilustracion) .pl-toolbar {
+    max-width: calc(66% - 2rem);
+  }
+}
