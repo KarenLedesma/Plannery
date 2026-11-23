@@ -46,3 +46,58 @@
 .catalogo-form { scroll-margin-top: 1rem; }
 .catalogo-form-grilla .catalogo-form-check input { width: auto; padding: 0; }
 .catalogo-admin h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+
+/* ===== Catálogo: mismo panel que el resto de las pantallas ===== */
+.catalogo-admin {
+  max-width: none;
+  margin: 0;
+  padding: 2rem 2.25rem 2.5rem;
+}
+
+.catalogo-admin h1 {
+  margin-bottom: 0.6rem;
+  font-size: 2.2rem;
+}
+
+.catalogo-filtros select {
+  padding: 0.5rem 0.9rem;
+  border-color: transparent;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(30, 41, 59, 0.1);
+  font-weight: 600;
+}
+
+.catalogo-guardar {
+  padding: 0.6rem 1.3rem;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #1b6fa8, #f6893b);
+  box-shadow: 0 4px 12px rgba(27, 111, 168, 0.3);
+}
+
+.catalogo-guardar:hover {
+  background: linear-gradient(90deg, #155a89, #e57a2c);
+}
+
+.catalogo-cancelar {
+  padding: 0.6rem 1.3rem;
+  border-radius: 12px;
+}
+
+.catalogo-tabla {
+  border: 1px solid #e4ddd0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(30, 41, 59, 0.1);
+}
+
+.catalogo-tabla th {
+  background: #f2ece1;
+}
+
+.catalogo-form {
+  padding: 1.5rem;
+  border-color: #e4ddd0;
+  border-radius: 20px;
+  box-shadow: 0 6px 18px rgba(30, 41, 59, 0.1);
+}
