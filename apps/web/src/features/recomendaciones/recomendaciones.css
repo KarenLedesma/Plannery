@@ -1,20 +1,125 @@
-.recomendaciones { max-width: 900px; margin: 0 auto; padding: 1rem; }
-.recomendaciones .dias { display: grid; gap: 1rem; }
-.recomendaciones .dia { border: 1px solid #ddd; border-left-width: 6px; border-radius: 8px; padding: 1rem; background: #fff; }
-.recomendaciones .dia header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-.recomendaciones .dia h3 { margin: 0;}
-.recomendaciones .dia-bueno { border-left-color: #2e7d32; }
-.recomendaciones .dia-lluvioso { border-left-color: #1565c0; }
-.recomendaciones .dia-extremo { border-left-color: #c62828; }
-.recomendaciones .etiqueta { font-size: 0.85rem; font-weight: 600; }
-.recomendaciones .clima { color: #444; }
-.recomendaciones ul { list-style: none; padding: 0; margin: 0.5rem 0; }
-.recomendaciones li { padding: 0.5rem 0; border-top: 1px solid #eee; }
-.recomendaciones .tipo { font-size: 0.8rem; background: #eef; border-radius: 4px; padding: 0 0.4rem; }
-.recomendaciones .direccion { color: #555; font-size: 0.9rem; }
+.recomendaciones .dias {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+  align-items: start;
+}
+
+.recomendaciones .dia {
+  background: #ffffff;
+  border: 1px solid #e4ddd0;
+  border-top-width: 6px;
+  border-radius: 20px;
+  padding: 1.25rem 1.4rem;
+  box-shadow: 0 6px 18px rgba(30, 41, 59, 0.1);
+}
+
+.recomendaciones .dia-bueno { border-top-color: #2e7d32; }
+.recomendaciones .dia-lluvioso { border-top-color: #1565c0; }
+.recomendaciones .dia-extremo { border-top-color: #c62828; }
+
+.recomendaciones .dia header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.recomendaciones .dia h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #0f2a43;
+}
+
+.recomendaciones .clima {
+  margin: 0.35rem 0 0;
+  font-size: 0.92rem;
+  color: #57534e;
+}
+
+.recomendaciones .etiqueta {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.recomendaciones .dia-bueno .etiqueta { background: #dcfce7; color: #166534; }
+.recomendaciones .dia-lluvioso .etiqueta { background: #dbeafe; color: #1e40af; }
+.recomendaciones .dia-extremo .etiqueta { background: #fee2e2; color: #991b1b; }
+
+.recomendaciones ul {
+  display: grid;
+  gap: 0.6rem;
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0.5rem;
+}
+
+.recomendaciones li {
+  background: #faf7f2;
+  border: 1px solid #f0e9dc;
+  border-radius: 12px;
+  padding: 0.7rem 0.9rem;
+}
+
+.recomendaciones .act-cab {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.recomendaciones li strong {
+  color: #0f2a43;
+}
+
+.recomendaciones .tipo {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: #e8f3fa;
+  color: #164e78;
+  white-space: nowrap;
+}
+
+.recomendaciones .direccion {
+  margin-top: 0.25rem;
+  font-size: 0.88rem;
+  color: #57534e;
+}
+
+.recomendaciones li p {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: #334155;
+}
+
+.recomendaciones .ver-todas {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1.1rem;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #1b6fa8, #f6893b);
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.recomendaciones .ver-todas:hover {
+  filter: brightness(0.95);
+}
+
 .recomendaciones .error { color: #b00020; }
-.recomendaciones .aviso { color: #555; font-style: italic; }
-.atribucion {
+.recomendaciones .aviso { margin-top: 1rem; color: #555; font-style: italic; }
+
+.recomendaciones .atribucion {
   margin-top: 1.5rem;
   font-size: 0.85rem;
   color: #666;

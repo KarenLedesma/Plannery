@@ -9,6 +9,8 @@ const POR_DIA = 5
 
 const ETIQUETA_DIA = { BUENO: 'Día bueno', LLUVIOSO: 'Día lluvioso', EXTREMO: 'Clima extremo' } as const
 const ETIQUETA_TIPO = { INTERIOR: 'Interior', EXTERIOR: 'Exterior', MIXTA: 'Mixta' } as const
+const ICONO_DIA = { BUENO: '☀️', LLUVIOSO: '🌧️', EXTREMO: '🌡️' } as const
+const ICONO_TIPO = { INTERIOR: '🏛️', EXTERIOR: '🌳', MIXTA: '🔀' } as const
 
 const capitalizar = (texto: string) => texto.charAt(0).toUpperCase() + texto.slice(1)
 
@@ -30,12 +32,16 @@ function DiaTarjeta({ dia }: { dia: DiaRecomendado }) {
   return (
     <article className={`dia dia-${clima.tipoDia.toLowerCase()}`}>
       <header>
-        <h3>{capitalizar(formatearFecha(dia.fecha))}</h3>
-        <span className="etiqueta">{ETIQUETA_DIA[clima.tipoDia]}</span>
+        <div>
+          <h3>{capitalizar(formatearFecha(dia.fecha))}</h3>
+          <p className="clima">
+            🌡️ {clima.tempMin}° a {clima.tempMax}° · 🌧️ {clima.probLluvia}% de probabilidad de lluvia
+          </p>
+        </div>
+        <span className="etiqueta">
+          {ICONO_DIA[clima.tipoDia]} {ETIQUETA_DIA[clima.tipoDia]}
+        </span>
       </header>
-      <p className="clima">
-        {clima.tempMin}° a {clima.tempMax}° · {clima.probLluvia}% de probabilidad de lluvia
-      </p>
 
       {dia.actividades.length === 0 ? (
         <p>No hay actividades para recomendar este día.</p>
@@ -44,14 +50,19 @@ function DiaTarjeta({ dia }: { dia: DiaRecomendado }) {
           <ul>
             {visibles.map((a) => (
               <li key={a.id}>
-                <strong>{a.nombre}</strong> <span className="tipo">{ETIQUETA_TIPO[a.tipo]}</span>
-                {a.direccion && <div className="direccion">{a.direccion}</div>}
+                <div className="act-cab">
+                  <strong>{a.nombre}</strong>
+                  <span className="tipo">
+                    {ICONO_TIPO[a.tipo]} {ETIQUETA_TIPO[a.tipo]}
+                  </span>
+                </div>
+                {a.direccion && <div className="direccion">📍 {a.direccion}</div>}
                 {a.descripcion && <p>{a.descripcion}</p>}
               </li>
             ))}
           </ul>
           {dia.actividades.length > POR_DIA && (
-            <button type="button" onClick={() => setVerTodas(!verTodas)}>
+            <button type="button" className="ver-todas" onClick={() => setVerTodas(!verTodas)}>
               {verTodas ? 'Ver menos' : `Ver todas (${dia.actividades.length})`}
             </button>
           )}
@@ -80,16 +91,18 @@ export function RecomendacionesPage() {
   }, [id])
 
   return (
-    <section className="recomendaciones">
-      <Link to="/">← Volver al inicio</Link>
-      <h2>Recomendaciones según el clima</h2>
+    <section className="pl-inicio recomendaciones">
+      <Link to={`/viajes/${id}`} className="pl-back-link">
+        ← Volver al viaje
+      </Link>
+      <h1 className="pl-inicio-titulo">Recomendaciones según el clima</h1>
 
       {cargando && <p>Consultando el pronóstico...</p>}
       {error && <p role="alert" className="error">{error}</p>}
 
       {datos && (
         <>
-          <p>Destino: {datos.destino}</p>
+          <p className="pl-inicio-tagline">📍 Destino: {datos.destino}</p>
           {datos.dias.length === 0 && (
             <p>Todavía no hay pronóstico para las fechas de este viaje.</p>
           )}
