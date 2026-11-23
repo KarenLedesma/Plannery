@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { crearItinerario } from './itinerario.service';
 import { ActividadSelect } from '../catalogo/ActividadSelect';
@@ -11,31 +11,31 @@ export const ItinerarioFormComponent: React.FC<{ onAgregado?: () => void }> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Cargar actividades disponibles (podría traerlas de una API o del catálogo)
-    // Por ahora dejamos el formulario vacío para ingreso manual
-  }, [itinerarioId]);
-
   const manejarSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!itinerarioId) return;
+
+    if (!actividadId) {
+      setError('Por favor, seleccioná una actividad válida de la lista.');
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
     try {
-      const dto: any = {
+      const dto: { actividadId: string; fecha: string; nota?: string } = {
         actividadId,
         fecha,
       };
       if (notas.trim()) {
-        dto.nota = notas;
+        dto.nota = notas.trim();
       }
       await crearItinerario(itinerarioId, dto);
       onAgregado?.();
       setNotas('');
       setActividadId('');
       setFecha(new Date().toISOString().split('T')[0]);
-      setNotas('');
     } catch (e: any) {
       setError(e.message);
     } finally {
