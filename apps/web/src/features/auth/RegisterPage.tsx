@@ -44,47 +44,64 @@ export function RegisterPage() {
   }
 
   return (
-    <main className="auth">
-      <h1>Crear cuenta</h1>
-      <form onSubmit={enviar} noValidate>
-        <label>
-          Nombre
-          <input value={nombre} onChange={(e) => setNombre(e.target.value)} autoComplete="name" />
-        </label>
-        <label>
-          Email
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
-        </label>
-        <label>
-          Contraseña (mínimo 8 caracteres)
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="new-password"
-          />
-        </label>
-        <label>
-          Repetir contraseña
-          <input
-            type="password"
-            value={repetida}
-            onChange={(e) => setRepetida(e.target.value)}
-            autoComplete="new-password"
-          />
-        </label>
-        {error && (
-          <p role="alert" className="error">
-            {error}
+    <main className="login">
+      <aside className="login-hero">
+        <div className="login-marca">Plannery</div>
+        <h2>Empezá a planificar tu Buenos Aires</h2>
+        <p>Creá tu cuenta y organizá tus viajes con recomendaciones pensadas para el pronóstico de cada día.</p>
+        <div className="login-sol" aria-hidden="true" />
+        <svg className="login-obelisco" viewBox="0 0 120 420" aria-hidden="true" focusable="false">
+          <polygon points="60,10 66,70 80,390 40,390 54,70" fill="#fbf7f0" />
+          <rect x="30" y="390" width="60" height="30" fill="#efe6d6" />
+          <rect x="56" y="110" width="8" height="14" rx="4" fill="#1b6fa8" opacity="0.35" />
+        </svg>
+      </aside>
+
+      <section className="login-panel">
+        <div className="login-tarjeta">
+          <h1>Crear cuenta</h1>
+          <p className="login-sub">Registrate para empezar a planificar tus viajes.</p>
+          <form onSubmit={enviar} noValidate>
+            <label>
+              Nombre
+              <input value={nombre} onChange={(e) => setNombre(e.target.value)} autoComplete="name" />
+            </label>
+            <label>
+              Email
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
+            </label>
+            <label>
+              Contraseña (mínimo 8 caracteres)
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="new-password"
+              />
+            </label>
+            <label>
+              Repetir contraseña
+              <input
+                type="password"
+                value={repetida}
+                onChange={(e) => setRepetida(e.target.value)}
+                autoComplete="new-password"
+              />
+            </label>
+            {error && (
+              <p role="alert" className="error">
+                {error}
+              </p>
+            )}
+            <button type="submit" className="boton" disabled={enviando}>
+              {enviando ? 'Creando cuenta…' : 'Registrarme'}
+            </button>
+          </form>
+          <p className="login-pie">
+            ¿Ya tenés cuenta? <Link to="/login">Iniciá sesión</Link>
           </p>
-        )}
-        <button type="submit" disabled={enviando}>
-          {enviando ? 'Creando cuenta…' : 'Registrarme'}
-        </button>
-      </form>
-      <p>
-        ¿Ya tenés cuenta? <Link to="/login">Iniciá sesión</Link>
-      </p>
+        </div>
+      </section>
     </main>
   )
 }
