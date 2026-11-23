@@ -103,9 +103,9 @@ export function CatalogoAdminPage() {
   }
 
   return (
-    <section className="catalogo-admin">
-      <h1>Catálogo de actividades</h1>
-      <p className="catalogo-ayuda">Acá se administran las actividades que se recomiendan en los viajes.</p>
+      <section className="pl-inicio catalogo-admin">
+      <h1 className="pl-inicio-titulo">Catálogo de actividades</h1>
+      <p className="pl-inicio-tagline">Acá se administran las actividades que se recomiendan en los viajes.</p>
 
       <div className="catalogo-barra">
         <div className="catalogo-filtros">
