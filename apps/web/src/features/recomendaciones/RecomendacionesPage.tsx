@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { mensajeDeError } from '../../shared/api'
+import { crearItinerario, listarItinerario } from '../itinerario/itinerario.service'
 import { obtenerRecomendaciones } from './recomendaciones.service'
 import type { DiaRecomendado, Recomendaciones } from './tipos'
 import './recomendaciones.css'
@@ -14,6 +15,9 @@ const ICONO_TIPO = { INTERIOR: '🏛️', EXTERIOR: '🌳', MIXTA: '🔀' } as c
 
 const capitalizar = (texto: string) => texto.charAt(0).toUpperCase() + texto.slice(1)
 
+// Clave para saber si una actividad ya está en el itinerario ese día
+const clave = (actividadId: string, fecha: string) => `${actividadId}|${fecha.slice(0, 10)}`
+
 // "2026-11-17" -> "martes, 17 de noviembre". Se usa el mediodía en UTC para que la fecha no se corra un día.
 function formatearFecha(fecha: string) {
   return new Date(`${fecha}T12:00:00Z`).toLocaleDateString('es-AR', {
@@ -24,7 +28,74 @@ function formatearFecha(fecha: string) {
   })
 }
 
-function DiaTarjeta({ dia }: { dia: DiaRecomendado }) {
+type EstadoAgregar = 'libre' | 'agregando' | 'agregada'
+
+function BotonAgregar({
+  viajeId,
+  actividadId,
+  fecha,
+  yaAgregada,
+}: {
+  viajeId: string
+  actividadId: string
+  fecha: string
+  yaAgregada: boolean
+}) {
+  const [estado, setEstado] = useState<EstadoAgregar>(yaAgregada ? 'agregada' : 'libre')
+  const [error, setError] = useState('')
+
+  // Si el itinerario termina de cargar después de mostrar la tarjeta, se actualiza el estado
+  useEffect(() => {
+    if (yaAgregada) setEstado('agregada')
+  }, [yaAgregada])
+
+  async function agregar() {
+    setEstado('agregando')
+    setError('')
+    try {
+      await crearItinerario(viajeId, { actividadId, fecha })
+      setEstado('agregada')
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'No se pudo agregar al itinerario.')
+      setEstado('libre')
+    }
+  }
+
+  const texto =
+    estado === 'agregada'
+      ? '✓ Agregada al itinerario'
+      : estado === 'agregando'
+        ? 'Agregando…'
+        : '+ Agregar al itinerario'
+
+  return (
+    <div className="agregar">
+      <button
+        type="button"
+        className={estado === 'agregada' ? 'btn-agregar agregada' : 'btn-agregar'}
+        onClick={agregar}
+        disabled={estado !== 'libre'}
+      >
+        {texto}
+      </button>
+      {error && (
+        <p role="alert" className="agregar-error">
+          {error}
+        </p>
+      )}
+    </div>
+  )
+}
+
+function DiaTarjeta({
+  dia,
+  viajeId,
+  agregadas,
+}: {
+  dia: DiaRecomendado
+  viajeId: string
+  agregadas: Set<string>
+}) {
   const [verTodas, setVerTodas] = useState(false)
   const visibles = verTodas ? dia.actividades : dia.actividades.slice(0, POR_DIA)
   const { clima } = dia
@@ -58,6 +129,12 @@ function DiaTarjeta({ dia }: { dia: DiaRecomendado }) {
                 </div>
                 {a.direccion && <div className="direccion">📍 {a.direccion}</div>}
                 {a.descripcion && <p>{a.descripcion}</p>}
+                <BotonAgregar
+                  viajeId={viajeId}
+                  actividadId={a.id}
+                  fecha={dia.fecha}
+                  yaAgregada={agregadas.has(clave(a.id, dia.fecha))}
+                />
               </li>
             ))}
           </ul>
@@ -77,6 +154,7 @@ export function RecomendacionesPage() {
   const [datos, setDatos] = useState<Recomendaciones | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [cargando, setCargando] = useState(true)
+  const [agregadas, setAgregadas] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     if (!id) return
@@ -88,6 +166,14 @@ export function RecomendacionesPage() {
       })
       .catch((e) => setError(mensajeDeError(e)))
       .finally(() => setCargando(false))
+  }, [id])
+
+  // Qué actividades ya están en el itinerario (para marcarlas). Si falla, simplemente no se marcan.
+  useEffect(() => {
+    if (!id) return
+    listarItinerario(id)
+      .then((items) => setAgregadas(new Set(items.map((i) => clave(i.actividadId, i.fecha)))))
+      .catch(() => {})
   }, [id])
 
   return (
@@ -108,7 +194,7 @@ export function RecomendacionesPage() {
           )}
           <div className="dias">
             {datos.dias.map((dia) => (
-              <DiaTarjeta key={dia.fecha} dia={dia} />
+              <DiaTarjeta key={dia.fecha} dia={dia} viajeId={datos.viajeId} agregadas={agregadas} />
             ))}
           </div>
           {datos.sinPronostico.length > 0 && (
