@@ -44,9 +44,7 @@ export class ResumenService {
       ultimos4,
       actualizadoEn: config.actualizadoEn,
     };
-  }
-
-  async guardarConfig(usuarioId: string, dto: GuardarIaConfigDto) {
+  }async guardarConfig(usuarioId: string, dto: GuardarIaConfigDto) {
     const proveedor = dto.proveedor ?? 'gemini';
     const apiKeyEncrypted = encriptarApiKey(dto.apiKey);
 
@@ -125,7 +123,6 @@ export class ResumenService {
     const apiKey = desencriptarApiKey(config.apiKeyEncrypted);
     const prompt = this.construirPrompt(viaje);
     const textoResumen = await this.invocarProveedorIa(config.proveedor, apiKey, prompt);
-
     return {
       viajeId: viaje.id,
       proveedor: config.proveedor,
@@ -184,6 +181,67 @@ Incluí:
 3. Dos o tres recomendaciones prácticas según las actividades cargadas.`;
   }
 
+  private async resolverModeloGemini(apiKey: string, signal: AbortSignal): Promise<string> {
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`,
+        { signal },
+      );
+      if (!res.ok) return 'gemini-2.5-flash';
+
+      const data: any = await res.json();
+      const modelos: any[] = data?.models ?? [];
+
+      const compatibles = modelos.filter(
+        (m) =>
+          Array.isArray(m.supportedGenerationMethods) &&
+          m.supportedGenerationMethods.includes('generateContent') &&
+          typeof m.name === 'string' &&
+          m.name.includes('gemini'),
+      );
+
+      const preferido =
+        compatibles.find((m) => m.name.includes('flash')) ?? compatibles[0];
+
+      return preferido ? preferido.name.replace(/^models\//, '') : 'gemini-2.5-flash';
+    } catch {
+      return 'gemini-2.5-flash';
+    }
+  }
+
+  private async resolverModeloOpenAiCompatible(
+    baseUrl: string,
+    apiKey: string,
+    fallback: string,
+    signal: AbortSignal,
+  ): Promise<string> {
+    try {
+      const res = await fetch(`${baseUrl}/models`, {
+        headers: { Authorization: `Bearer ${apiKey}` },
+        signal,
+      });
+      if (!res.ok) return fallback;
+
+      const data: any = await res.json();
+      const modelos: any[] = data?.data ?? [];
+
+      const excluidos = ['whisper', 'tts', 'embedding', 'moderation', 'dall-e', 'guard'];
+      const deTexto = modelos.filter(
+        (m) =>
+          typeof m.id === 'string' &&
+          !excluidos.some((palabra) => m.id.toLowerCase().includes(palabra)),
+      );
+
+      const preferido =
+        deTexto.find((m) => m.id.includes('llama-3') || m.id.includes('gpt-4o-mini')) ??
+        deTexto[0];
+
+      return preferido?.id ?? fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
   private async invocarProveedorIa(
     proveedor: string,
     apiKey: string,
@@ -194,8 +252,10 @@ Incluí:
 
     try {
       if (proveedor === 'gemini') {
+        const model = await this.resolverModeloGemini(apiKey, controller.signal);
+
         const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
+          `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -224,13 +284,18 @@ Incluí:
         return texto;
       }
 
-      const url =
-        proveedor === 'groq'
-          ? 'https://api.groq.com/openai/v1/chat/completions'
-          : 'https://api.openai.com/v1/chat/completions';
-      const model = proveedor === 'groq' ? 'llama-3.3-70b-versatile' : 'gpt-4o-mini';
+      const baseUrl =
+        proveedor === 'groq' ? 'https://api.groq.com/openai/v1' : 'https://api.openai.com/v1';
+      const fallback = proveedor === 'groq' ? 'llama-3.1-8b-instant' : 'gpt-4o-mini';
 
-      const res = await fetch(url, {
+      const model = await this.resolverModeloOpenAiCompatible(
+        baseUrl,
+        apiKey,
+        fallback,
+        controller.signal,
+      );
+
+      const res = await fetch(`${baseUrl}/chat/completions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
