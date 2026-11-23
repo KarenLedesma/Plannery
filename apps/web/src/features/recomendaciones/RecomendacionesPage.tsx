@@ -35,7 +35,7 @@ function DiaTarjeta({ dia }: { dia: DiaRecomendado }) {
         <div>
           <h3>{capitalizar(formatearFecha(dia.fecha))}</h3>
           <p className="clima">
-            🌡️ {clima.tempMin}° a {clima.tempMax}° · 🌧️ {clima.probLluvia}% de probabilidad de lluvia
+            🌡️ {clima.tempMin}° a {clima.tempMax}° · 🌧️ {clima.probLluvia}% de lluvia
           </p>
         </div>
         <span className="etiqueta">
