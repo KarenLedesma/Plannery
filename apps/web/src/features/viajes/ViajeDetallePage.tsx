@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import type { Viaje } from './tipos';
+import { ResumenViajePanel } from '../resumen/ResumenViajePanel';
 
 // "2026-11-22T00:00:00.000Z" -> "22/11/2026" (sin pasar por Date, para evitar corrimientos de zona horaria)
 const formatearFecha = (iso: string) => iso.slice(0, 10).split('-').reverse().join('/');
@@ -59,6 +60,8 @@ export function ViajeDetallePage() {
           ✨ Ver recomendaciones
         </Link>
       </div>
+
+      <ResumenViajePanel viajeId={viaje.id} />
     </section>
   );
 }
