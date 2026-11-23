@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { createPortal } from 'react-dom'
 import type { FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { actualizarGasto, borrarGasto, crearGasto, listarGastos } from './gastos.service'
@@ -93,6 +94,10 @@ export function GastosPage() {
   const [enviando, setEnviando] = useState(false)
   const [errorForm, setErrorForm] = useState<string | null>(null)
 
+  // Ventana emergente de confirmación de borrado
+  const [gastoAEliminar, setGastoAEliminar] = useState<Gasto | null>(null)
+  const [eliminando, setEliminando] = useState(false)
+
   useEffect(() => {
     let activo = true
     listarGastos(viajeId)
@@ -160,14 +165,20 @@ export function GastosPage() {
     }
   }
 
-  const eliminar = async (gasto: Gasto) => {
-    if (!window.confirm(`¿Borrar el gasto "${gasto.descripcion}"?`)) return
+  const confirmarEliminacion = async () => {
+    if (!gastoAEliminar) return
+    const gasto = gastoAEliminar
+    setEliminando(true)
     setError(null)
     try {
       await borrarGasto(viajeId, gasto.id)
       setGastos((anteriores) => anteriores.filter((g) => g.id !== gasto.id))
+      setGastoAEliminar(null)
     } catch (err) {
       setError(textoDeError(err))
+      setGastoAEliminar(null)
+    } finally {
+      setEliminando(false)
     }
   }
 
@@ -297,7 +308,12 @@ export function GastosPage() {
                   <p className="gasto-estimado">Estimado: {dinero(g.montoEstimado)}</p>
                   <EditorReal gasto={g} onGuardar={(monto) => guardarReal(g, monto)} />
                 </div>
-                <button type="button" className="gasto-borrar" onClick={() => eliminar(g)} aria-label={`Borrar ${g.descripcion}`}>
+                <button
+                  type="button"
+                  className="gasto-borrar"
+                  onClick={() => setGastoAEliminar(g)}
+                  aria-label={`Borrar ${g.descripcion}`}
+                >
                   🗑️
                 </button>
               </li>
@@ -305,6 +321,40 @@ export function GastosPage() {
           </ul>
         </>
       )}
+
+      {gastoAEliminar &&
+        createPortal(
+          <div
+            className="gastos-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-gasto-titulo"
+          >
+            <h2 id="modal-gasto-titulo">¿Borrar el gasto «{gastoAEliminar.descripcion}»?</h2>
+            <p>
+              Esta acción eliminará el gasto por <strong>{dinero(gastoAEliminar.montoEstimado)}</strong> de forma permanente.
+            </p>
+            <div className="gastos-modal-botones">
+              <button
+                type="button"
+                className="gastos-modal-cancelar"
+                disabled={eliminando}
+                onClick={() => setGastoAEliminar(null)}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="gastos-modal-confirmar"
+                disabled={eliminando}
+                onClick={confirmarEliminacion}
+              >
+                {eliminando ? 'Borrando…' : 'Sí, borrar'}
+              </button>
+            </div>
+          </div>,
+          document.body,
+        )}
     </section>
   )
 }
