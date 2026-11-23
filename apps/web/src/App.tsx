@@ -8,6 +8,7 @@ import { RecomendacionesPage } from './features/recomendaciones/RecomendacionesP
 import { CatalogoAdminPage } from './features/catalogo/CatalogoAdminPage'
 import { ViajeListComponent, ViajeFormComponent, ViajeDetallePage } from './features/viajes'
 import { ItinerarioPage } from './features/itinerario'
+import { GastosPage, ComparacionPage } from './features/gastos'
 
 export default function App() {
   return (
@@ -23,6 +24,8 @@ export default function App() {
           <Route path="viajes/:id" element={<ViajeDetallePage />} />
           <Route path="viajes/:id/itinerario" element={<ItinerarioPage />} />
           <Route path="viajes/:id/recomendaciones" element={<RecomendacionesPage />} />
+          <Route path="viajes/:id/gastos" element={<GastosPage />} />
+          <Route path="viajes/:id/gastos/comparacion" element={<ComparacionPage />} />
         </Route>
       </Route>
 

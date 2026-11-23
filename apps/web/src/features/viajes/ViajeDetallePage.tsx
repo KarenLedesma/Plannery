@@ -56,6 +56,9 @@ export function ViajeDetallePage() {
         <Link to={`/viajes/${viaje.id}/itinerario`} className="pl-btn-sec">
           Ver itinerario
         </Link>
+        <Link to={`/viajes/${viaje.id}/gastos`} className="pl-btn-sec">
+          💰 Gastos
+        </Link>
         <Link to={`/viajes/${viaje.id}/recomendaciones`} className="pl-btn-recs">
           ✨ Ver recomendaciones
         </Link>
