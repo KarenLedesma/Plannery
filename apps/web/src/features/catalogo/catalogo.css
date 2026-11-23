@@ -101,3 +101,36 @@
   border-radius: 20px;
   box-shadow: 0 6px 18px rgba(30, 41, 59, 0.1);
 }
+.catalogo-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background: #ffffff;
+  border: 1.5px solid #d9ccb4;
+  border-radius: 14px;
+  padding: 1.5rem;
+  max-width: 440px;
+  width: calc(100% - 2rem);
+  box-shadow: 0 16px 40px rgba(31, 42, 58, 0.25);
+  color: #1f2a3a;
+}
+
+.catalogo-modal h2 {
+  margin: 0 0 0.6rem;
+  font-size: 1.3rem;
+  color: #1f2a3a;
+}
+
+.catalogo-modal p {
+  margin: 0 0 1.25rem;
+  color: #4a5568;
+  line-height: 1.45;
+}
+
+.catalogo-modal-botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}

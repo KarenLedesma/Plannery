@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { mensajeDeError } from '../../shared/api'
 import {
   actualizarActividad,
@@ -25,6 +26,10 @@ export function CatalogoAdminPage() {
   const [formulario, setFormulario] = useState<Actividad | 'nueva' | null>(null)
   const [guardando, setGuardando] = useState(false)
   const [errorForm, setErrorForm] = useState<string | null>(null)
+
+  // Estado para la ventana emergente de confirmación de borrado
+  const [actividadAEliminar, setActividadAEliminar] = useState<Actividad | null>(null)
+  const [eliminando, setEliminando] = useState(false)
 
   useEffect(() => {
     listarDestinos()
@@ -82,11 +87,10 @@ export function CatalogoAdminPage() {
     }
   }
 
-  async function eliminar(actividad: Actividad) {
-    const confirmado = window.confirm(
-      `¿Eliminar "${actividad.nombre}"? Si ya está en un itinerario, se archiva en lugar de borrarse.`,
-    )
-    if (!confirmado) return
+  async function confirmarEliminacion() {
+    if (!actividadAEliminar) return
+    const actividad = actividadAEliminar
+    setEliminando(true)
     setError(null)
     try {
       const respuesta = await eliminarActividad(actividad.id)
@@ -95,15 +99,19 @@ export function CatalogoAdminPage() {
           ? `"${actividad.nombre}" estaba en un itinerario, así que se archivó.`
           : `"${actividad.nombre}" se eliminó.`,
       )
+      setActividadAEliminar(null)
       setCargando(true)
       setVersion((v) => v + 1)
     } catch (e) {
       setError(mensajeDeError(e))
+      setActividadAEliminar(null)
+    } finally {
+      setEliminando(false)
     }
   }
 
   return (
-      <section className="pl-inicio catalogo-admin">
+    <section className="pl-inicio catalogo-admin">
       <h1 className="pl-inicio-titulo">Catálogo de actividades</h1>
       <p className="pl-inicio-tagline">Acá se administran las actividades que se recomiendan en los viajes.</p>
 
@@ -186,7 +194,11 @@ export function CatalogoAdminPage() {
                         Editar
                       </button>
                       {a.activa && (
-                        <button type="button" className="catalogo-borrar" onClick={() => eliminar(a)}>
+                        <button
+                          type="button"
+                          className="catalogo-borrar"
+                          onClick={() => setActividadAEliminar(a)}
+                        >
                           Eliminar
                         </button>
                       )}
@@ -198,6 +210,40 @@ export function CatalogoAdminPage() {
           </table>
         </>
       )}
+
+      {actividadAEliminar &&
+        createPortal(
+          <div
+            className="catalogo-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-eliminar-titulo"
+          >
+            <h2 id="modal-eliminar-titulo">¿Eliminar «{actividadAEliminar.nombre}»?</h2>
+            <p>
+              Si esta actividad ya forma parte de algún itinerario, se va a <strong>archivar</strong> en lugar de borrarse para no afectar los viajes existentes.
+            </p>
+            <div className="catalogo-modal-botones">
+              <button
+                type="button"
+                className="catalogo-cancelar"
+                disabled={eliminando}
+                onClick={() => setActividadAEliminar(null)}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="catalogo-guardar"
+                disabled={eliminando}
+                onClick={confirmarEliminacion}
+              >
+                {eliminando ? 'Eliminando…' : 'Sí, eliminar'}
+              </button>
+            </div>
+          </div>,
+          document.body,
+        )}
     </section>
   )
 }
