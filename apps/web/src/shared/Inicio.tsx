@@ -27,9 +27,10 @@ const MENSAJE_VACIO: Record<Filtro, string> = {
 }
 
 // Helper para categorizar un viaje
-const categorizarViaje = (viaje: Viaje, hoy: Date): Estado => {
-  const inicio = new Date(viaje.fechaInicio)
-  const fin = new Date(viaje.fechaFin)
+// Se comparan solo las fechas (AAAA-MM-DD), sin la hora: un viaje de hoy para hoy está "en curso" todo el día
+const categorizarViaje = (viaje: Viaje, hoy: string): Estado => {
+  const inicio = viaje.fechaInicio.slice(0, 10)
+  const fin = viaje.fechaFin.slice(0, 10)
   if (fin < hoy) return 'terminados'
   if (inicio > hoy) return 'pendientes'
   return 'en_curso'
@@ -57,7 +58,7 @@ export function Inicio() {
     cargarViajes()
   }, [])
 
-  const hoy = new Date()
+  const hoy = new Date().toLocaleDateString('en-CA') // fecha de hoy en hora local, AAAA-MM-DD
   const viajesFiltrados = viajes.filter(
     (viaje) => filtro === 'todos' || categorizarViaje(viaje, hoy) === filtro,
   )
