@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { createPortal } from 'react-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { api, mensajeDeError } from '../../shared/api';
 import type { Viaje } from './tipos';
 import { ResumenViajePanel } from '../resumen/ResumenViajePanel';
 
@@ -8,9 +10,13 @@ const formatearFecha = (iso: string) => iso.slice(0, 10).split('-').reverse().jo
 
 export function ViajeDetallePage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [viaje, setViaje] = useState<Viaje | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [confirmando, setConfirmando] = useState(false); // ventana de confirmación abierta
+  const [eliminando, setEliminando] = useState(false);
+  const [errorEliminar, setErrorEliminar] = useState<string | null>(null);
 
   useEffect(() => {
     async function cargarViaje() {
@@ -26,6 +32,20 @@ export function ViajeDetallePage() {
     }
     if (id) cargarViaje();
   }, [id]);
+
+  const confirmarEliminacion = async () => {
+    if (!viaje) return;
+    setEliminando(true);
+    setErrorEliminar(null);
+    try {
+      await api(`/viajes/${viaje.id}`, { method: 'DELETE' });
+      navigate('/viajes');
+    } catch (e) {
+      setErrorEliminar(mensajeDeError(e));
+      setEliminando(false);
+      setConfirmando(false);
+    }
+  };
 
   if (loading) return <p>Cargando viaje...</p>;
   if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
@@ -65,6 +85,42 @@ export function ViajeDetallePage() {
       </div>
 
       <ResumenViajePanel viajeId={viaje.id} />
+
+      <div className="pl-zona-peligro">
+        {errorEliminar && <p className="pl-error-eliminar">{errorEliminar}</p>}
+        <button type="button" className="pl-btn-peligro" onClick={() => setConfirmando(true)}>
+          🗑️ Eliminar viaje
+        </button>
+      </div>
+
+      {confirmando &&
+        createPortal(
+          <div className="pl-modal" role="dialog" aria-modal="true" aria-labelledby="modal-viaje-titulo">
+            <h2 id="modal-viaje-titulo">¿Eliminar «{viaje.nombre}»?</h2>
+            <p>
+              Se van a borrar también su <strong>itinerario y sus gastos</strong>. Esta acción no se puede deshacer.
+            </p>
+            <div className="pl-modal-botones">
+              <button
+                type="button"
+                className="pl-modal-cancelar"
+                disabled={eliminando}
+                onClick={() => setConfirmando(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="pl-modal-confirmar"
+                disabled={eliminando}
+                onClick={confirmarEliminacion}
+              >
+                {eliminando ? 'Eliminando…' : 'Sí, eliminar'}
+              </button>
+            </div>
+          </div>,
+          document.body,
+        )}
     </section>
   );
 }
