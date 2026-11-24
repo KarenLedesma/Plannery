@@ -165,3 +165,34 @@
   font-size: 0.82rem;
   color: #b00020;
 }
+
+
+.recomendaciones .agregar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.recomendaciones .btn-agregar.agregada {
+  display: inline-block;
+}
+
+.recomendaciones .btn-quitar {
+  border: none;
+  background: none;
+  color: #c8431b;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.recomendaciones .btn-quitar:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.recomendaciones .btn-quitar:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
