@@ -592,10 +592,22 @@
   background: linear-gradient(90deg, #a93815, #e8912f);
 }
 
-/* Inicio: la fila de filtros y botón no pasa por debajo de la ilustración */
+/* Inicio: ni los filtros ni las tarjetas pasan por debajo de la ilustración */
 @media (min-width: 1101px) {
   .pl-inicio:has(.pl-ilustracion) .pl-toolbar {
     max-width: calc(66% - 2rem);
+  }
+
+  /* Dos tarjetas por fila: la tercera pasa a la fila de abajo */
+  .pl-inicio:has(.pl-ilustracion) .pl-viajes-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: calc(66% - 1rem);
+  }
+
+  /* La ilustración no crece con el panel: queda arriba a la derecha */
+  .pl-inicio:has(.pl-ilustracion) .pl-ilustracion {
+    max-height: 760px;
+    border-radius: 50% 28px 28px 50%;
   }
 }
 
