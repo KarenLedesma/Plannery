@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { mensajeDeError } from '../../shared/api'
 import { crearItinerario, listarItinerario } from '../itinerario/itinerario.service'
-import { obtenerRecomendaciones } from './recomendaciones.service'
+import { obtenerRecomendaciones, quitarDelItinerario } from './recomendaciones.service'
 import type { DiaRecomendado, Recomendaciones } from './tipos'
 import './recomendaciones.css'
 
@@ -28,56 +28,66 @@ function formatearFecha(fecha: string) {
   })
 }
 
-type EstadoAgregar = 'libre' | 'agregando' | 'agregada'
-
 function BotonAgregar({
   viajeId,
   actividadId,
   fecha,
-  yaAgregada,
+  itemId,
+  onAgregada,
+  onQuitada,
 }: {
   viajeId: string
   actividadId: string
   fecha: string
-  yaAgregada: boolean
+  itemId: string | undefined // si tiene valor, la actividad ya está en el itinerario
+  onAgregada: (clave: string, itemId: string) => void
+  onQuitada: (clave: string) => void
 }) {
-  const [estado, setEstado] = useState<EstadoAgregar>(yaAgregada ? 'agregada' : 'libre')
+  const [ocupado, setOcupado] = useState(false)
   const [error, setError] = useState('')
-
-  // Si el itinerario termina de cargar después de mostrar la tarjeta, se actualiza el estado
-  useEffect(() => {
-    if (yaAgregada) setEstado('agregada')
-  }, [yaAgregada])
+  const yaAgregada = itemId !== undefined
 
   async function agregar() {
-    setEstado('agregando')
+    setOcupado(true)
     setError('')
     try {
-      await crearItinerario(viajeId, { actividadId, fecha })
-      setEstado('agregada')
+      const item = await crearItinerario(viajeId, { actividadId, fecha })
+      onAgregada(clave(actividadId, fecha), item.id)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'No se pudo agregar al itinerario.')
-      setEstado('libre')
+    } finally {
+      setOcupado(false)
     }
   }
 
-  const texto =
-    estado === 'agregada'
-      ? '✓ Agregada al itinerario'
-      : estado === 'agregando'
-        ? 'Agregando…'
-        : '+ Agregar al itinerario'
+  async function quitar() {
+    if (!itemId) return
+    setOcupado(true)
+    setError('')
+    try {
+      await quitarDelItinerario(viajeId, itemId)
+      onQuitada(clave(actividadId, fecha))
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'No se pudo quitar del itinerario.')
+    } finally {
+      setOcupado(false)
+    }
+  }
 
   return (
     <div className="agregar">
-      <button
-        type="button"
-        className={estado === 'agregada' ? 'btn-agregar agregada' : 'btn-agregar'}
-        onClick={agregar}
-        disabled={estado !== 'libre'}
-      >
-        {texto}
-      </button>
+      {yaAgregada ? (
+        <>
+          <span className="btn-agregar agregada">✓ Agregada al itinerario</span>
+          <button type="button" className="btn-quitar" onClick={quitar} disabled={ocupado}>
+            {ocupado ? 'Quitando…' : 'Quitar'}
+          </button>
+        </>
+      ) : (
+        <button type="button" className="btn-agregar" onClick={agregar} disabled={ocupado}>
+          {ocupado ? 'Agregando…' : '+ Agregar al itinerario'}
+        </button>
+      )}
       {error && (
         <p role="alert" className="agregar-error">
           {error}
@@ -91,10 +101,14 @@ function DiaTarjeta({
   dia,
   viajeId,
   agregadas,
+  onAgregada,
+  onQuitada,
 }: {
   dia: DiaRecomendado
   viajeId: string
-  agregadas: Set<string>
+  agregadas: Map<string, string>
+  onAgregada: (clave: string, itemId: string) => void
+  onQuitada: (clave: string) => void
 }) {
   const [verTodas, setVerTodas] = useState(false)
   const visibles = verTodas ? dia.actividades : dia.actividades.slice(0, POR_DIA)
@@ -133,7 +147,9 @@ function DiaTarjeta({
                   viajeId={viajeId}
                   actividadId={a.id}
                   fecha={dia.fecha}
-                  yaAgregada={agregadas.has(clave(a.id, dia.fecha))}
+                  itemId={agregadas.get(clave(a.id, dia.fecha))}
+                  onAgregada={onAgregada}
+                  onQuitada={onQuitada}
                 />
               </li>
             ))}
@@ -154,7 +170,8 @@ export function RecomendacionesPage() {
   const [datos, setDatos] = useState<Recomendaciones | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [cargando, setCargando] = useState(true)
-  const [agregadas, setAgregadas] = useState<Set<string>>(new Set())
+  // clave (actividad + día) -> id del ítem del itinerario, necesario para poder quitarla
+  const [agregadas, setAgregadas] = useState<Map<string, string>>(new Map())
 
   useEffect(() => {
     if (!id) return
@@ -172,9 +189,19 @@ export function RecomendacionesPage() {
   useEffect(() => {
     if (!id) return
     listarItinerario(id)
-      .then((items) => setAgregadas(new Set(items.map((i) => clave(i.actividadId, i.fecha)))))
+      .then((items) => setAgregadas(new Map(items.map((i) => [clave(i.actividadId, i.fecha), i.id]))))
       .catch(() => {})
   }, [id])
+
+  const marcarAgregada = (c: string, itemId: string) =>
+    setAgregadas((anteriores) => new Map(anteriores).set(c, itemId))
+
+  const marcarQuitada = (c: string) =>
+    setAgregadas((anteriores) => {
+      const nuevo = new Map(anteriores)
+      nuevo.delete(c)
+      return nuevo
+    })
 
   return (
     <section className="pl-inicio recomendaciones">
@@ -194,7 +221,14 @@ export function RecomendacionesPage() {
           )}
           <div className="dias">
             {datos.dias.map((dia) => (
-              <DiaTarjeta key={dia.fecha} dia={dia} viajeId={datos.viajeId} agregadas={agregadas} />
+              <DiaTarjeta
+                key={dia.fecha}
+                dia={dia}
+                viajeId={datos.viajeId}
+                agregadas={agregadas}
+                onAgregada={marcarAgregada}
+                onQuitada={marcarQuitada}
+              />
             ))}
           </div>
           {datos.sinPronostico.length > 0 && (
