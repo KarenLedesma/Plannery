@@ -3,8 +3,24 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  // Agregá este bloque:
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
   preview: {
     allowedHosts: ['plannery-web.onrender.com', '.onrender.com'],
+    proxy: {
+      '/api': {
+        target: process.env.VITE_API_URL || 'https://plannery-f81z.onrender.com',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
   },
 });
