@@ -109,3 +109,31 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+.input-password-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-password-wrap input {
+  width: 100%;
+  padding-right: 2.75rem; /* Espacio para que el texto no tape el botón */
+}
+
+.boton-ojo {
+  position: absolute;
+  right: 0.65rem;
+  background: transparent;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  color: #6b645c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.boton-ojo:hover {
+  color: #1f1c19;
+}

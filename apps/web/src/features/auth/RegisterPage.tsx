@@ -3,8 +3,8 @@ import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from './useAuth'
 import { mensajeDeError } from '../../shared/api'
+import { PasswordInput } from './PasswordInput'
 
-// Mismos límites que el backend (auth.dto.ts)
 function validar(nombre: string, email: string, password: string, repetida: string): string {
   if (nombre.trim().length < 2) return 'El nombre debe tener al menos 2 caracteres.'
   if (!/^\S+@\S+\.\S+$/.test(email.trim())) return 'Ingresá un email válido.'
@@ -72,8 +72,7 @@ export function RegisterPage() {
             </label>
             <label>
               Contraseña (mínimo 8 caracteres)
-              <input
-                type="password"
+              <PasswordInput
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="new-password"
@@ -81,8 +80,7 @@ export function RegisterPage() {
             </label>
             <label>
               Repetir contraseña
-              <input
-                type="password"
+              <PasswordInput
                 value={repetida}
                 onChange={(e) => setRepetida(e.target.value)}
                 autoComplete="new-password"
