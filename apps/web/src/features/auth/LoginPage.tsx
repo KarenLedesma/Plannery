@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from './useAuth'
 import { mensajeDeError } from '../../shared/api'
+import { PasswordInput } from './PasswordInput'
 
 export function LoginPage() {
   const { login } = useAuth()
@@ -14,7 +15,6 @@ export function LoginPage() {
 
   async function enviar(e: FormEvent) {
     e.preventDefault()
-    // Validación en el navegador para dar respuesta rápida. El backend valida igual.
     if (!email.trim() || !password) {
       return
     }
@@ -22,7 +22,6 @@ export function LoginPage() {
     setEnviando(true)
     try {
       await login(email.trim(), password)
-      // Si lo mandaron al login desde una ruta protegida, vuelve a esa ruta
       const destino = (ubicacion.state as { desde?: string } | null)?.desde ?? '/'
       navigate(destino, { replace: true })
     } catch (err) {
@@ -62,8 +61,7 @@ export function LoginPage() {
             </label>
             <label>
               Contraseña
-              <input
-                type="password"
+              <PasswordInput
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
